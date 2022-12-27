@@ -1,0 +1,96 @@
+﻿
+@{
+    Layout = null;
+}
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Login</title>
+    @*<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <link href="~/Content/LoginStyles.css" rel="stylesheet" />*@
+
+    <!--bootstrap 5-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <!-- Font Icon -->
+    <link rel="stylesheet" href="~/DTLogin/fonts/material-icon/css/material-design-iconic-font.min.css">
+
+    <!-- Main css -->
+    <link rel="stylesheet" href="~/DTLogin/css/style.css?v1.0">
+
+    <link rel="icon" href="~/favicon.ico" type="image/x-icon">
+</head>
+
+
+<body class="main" style="background: #8ecbff;">
+    <div>
+
+        @if (TempData["mensaje"] != null)
+        {
+            <div class="alert alert-danger w-50 mx-auto text-center">
+                <strong>Error! </strong> @TempData["mensaje"]
+            </div>
+        }
+
+        <!-- Sing in  Form -->
+        <section class="sign-in">
+            <div class="container">
+                <div class="signin-content">
+
+                    <div class="signin-image">
+                        <center>
+                            <h2 class="form-title">Service Desk ADEX Marketing</h2>
+                        </center>
+
+                        <center>
+                            <img src="~/Images/help_desk_icon.png" alt="ADEX" width="100px">
+                        </center>
+
+                        <figure><img src="~/Images/logo_adex.png" alt="ADEX"></figure>
+                    </div>
+
+                    <div class="signin-form">
+                        <center>
+                            <h2 class="form-title">Ingreso</h2>
+                        </center>
+                        <center>
+                            <img src="~/Images/iconoProfile.png" alt="ADEX" width="100px">
+                        </center>
+
+                        @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @class = "md-float-material form-material", id = "login-form" }))
+                        {
+                            <form class="register-form" id="login-form">
+                                <div class="form-group">
+                                    <label for="your_name"><i class="zmdi zmdi-account material-icons-name"></i></label>
+                                    <input type="text" name="correo" id="correo" placeholder="Correo ADEX" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="your_pass"><i class="zmdi zmdi-lock"></i></label>
+                                    <input type="password" name="clave" id="clave" placeholder="Contraseña" />
+                                </div>
+                                <center>
+                                    <div class="form-group form-button">
+                                        <input type="submit" name="signin" id="signin" class="form-submit" value="Ingresar" />
+                                    </div>
+                                </center>
+
+                            </form>
+                        }
+                    </div>
+                </div>
+
+
+            </div>
+        </section>
+    </div>
+
+    <!-- JS -->
+    <script src="~/DTLogin/vendor/jquery/jquery.min.js"></script>
+    <script src="~/DTLogin/js/main.js"></script>
+</body>
+</html>
