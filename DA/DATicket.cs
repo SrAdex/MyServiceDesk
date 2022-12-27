@@ -15,7 +15,7 @@ using System.Web.Mvc;
 
 namespace DA
 {
-    internal class DATicket
+    public class DATicket
     {
         private readonly string _cadena;
         private readonly DAUsuario gestionUsuario;
@@ -513,6 +513,472 @@ namespace DA
 
             return detalleTicket;
         }
+        public string UsuarioResponsableDeAsignación(BE.BEUsuario usuario, int idTicket)
+        {
+            string mensaje = "";
+            using (SqlConnection con = DAConexionBD.ObtenerConexion())
+            {
+                try
+                {
+                    SqlCommand cmd = new SqlCommand("usp_Asignar_AsignadoPor", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
 
+                    cmd.Parameters.AddWithValue("@id_ticket", idTicket);
+                    cmd.Parameters.AddWithValue("@id", usuario.IdUsuario);
+
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+
+                    mensaje = "Asignado por, realizado correctamente";
+                }
+                catch (Exception ex)
+                {
+                    mensaje = "Error: " + ex.Message;
+                }
+                finally
+                {
+                    con.Close();
+                }
+
+            }
+
+            return mensaje;
+        }
+
+        public string GenerarFlujo(int idTicket, int idUsuarioResponsable, string tema, int[] tipoDeContenido, string descripcion, DateTime fechaEntrega)
+        {
+            string mensaje = "";
+            int pri = 0;
+            int numPiezas = GenerarTipoDeContenidoTicket(idTicket, tipoDeContenido);
+            var usuarioResponsable = gestionUsuario.BuscarUsuario(idUsuarioResponsable);
+            using (SqlConnection con = DAConexionBD.ObtenerConexion())
+            {
+                try
+                {
+                    SqlCommand cmd = new SqlCommand("usp_Asignar_Flujo", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@id_ticket", idTicket);
+                    //
+                    cmd.Parameters.AddWithValue("@id_usuario_modificacion", usuario.IdUsuario);
+                    if (idUsuarioResponsable > 0)
+                        cmd.Parameters.AddWithValue("@id_usuario_resposable", idUsuarioResponsable);
+                    else
+                        cmd.Parameters.AddWithValue("@id_usuario_resposable", DBNull.Value);
+                    //
+                    cmd.Parameters.AddWithValue("@tema", tema);
+                    cmd.Parameters.AddWithValue("@numeroPiezas", numPiezas);
+                    cmd.Parameters.AddWithValue("@descripcion", descripcion);
+                    DateTime hoy = DateTime.Now;
+                    TimeSpan dias = (TimeSpan)(fechaEntrega - hoy);
+                    int valPrioridad = dias.Days;
+                    if (valPrioridad == 1 || valPrioridad == 0 || valPrioridad < 0)
+                    {
+                        pri = 1;
+                    }
+                    else
+                    {
+                        if (valPrioridad == 2 || valPrioridad == 3)
+                        {
+                            pri = 2;
+                        }
+                        else
+                        {
+                            pri = 3;
+                        }
+                    }
+                    cmd.Parameters.AddWithValue("@prioridad", pri);
+                    cmd.Parameters.AddWithValue("@fechaEntrega", fechaEntrega);
+
+
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+
+                    mensaje = "Ticket Asignado correctamente";
+                }
+                catch (Exception ex)
+                {
+                    mensaje = "Error: " + ex.Message;
+                }
+                finally
+                {
+                    con.Close();
+                }
+
+                var detalleTicket = DetallarTicket(idTicket);
+                string mensaje1 = NotificarUsuarioAsignacion(usuarioResponsable, detalleTicket);
+                string mensaje2 = NotificarClienteAsignacion(detalleTicket);
+                mensaje = "Asignado Correctamente";
+            }
+
+            return mensaje;
+        }
+
+        public string NotificarClienteAsignacion(BE.ViewModels.DetalleTicketViewModel detalleTicket)
+        {
+            string mensaje = "";
+            try
+            {
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+
+                using (SmtpClient client = new SmtpClient("smtp.office365.com", 587))
+                {
+                    var urlHelper = new UrlHelper(HttpContext.Current.Request.RequestContext);
+                    string dominio = HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority) + urlHelper.Content("~");
+
+                    client.EnableSsl = true;
+                    client.Credentials = new System.Net.NetworkCredential("service.desk.mktg@adexperu.org.pe", "@dex2022");
+                    MailMessage message = new MailMessage()
+                    {
+                        IsBodyHtml = true,
+                        Body = "Estimado(a) " + ": </br>" +
+                                "Le brindamos la actualización del estado de su ticket Generado a Service Desk Marketing:" + "</br>" +
+                                "<b>Asunto: </b>" + detalleTicket.AsuntoTicket + "</br>" +
+                                "<b>Fecha de Generación: </b>" + detalleTicket.FechaGeneracion + "</br>" +
+                                "<b>Fecha de Entrega: </b>" + Convert.ToDateTime(detalleTicket.fechaEntrega).ToString("dd/MM/yyyy") + "</br>" +
+                                "<b>Etapa: </b>" + detalleTicket.EstadoTicket + "</br>" +
+                                "<b>Estado: </b>" + detalleTicket.etapa + "</br> </br>" +
+                                "<b>¡Favor de NO responder este correo!</b> </br> </br>" +
+                                "Atemtamente, </br>" +
+                                "Mesa de Servicio ADEX Marketing",
+
+                        BodyEncoding = System.Text.Encoding.UTF8,
+                        Subject = "Actualización de Ticket - " + detalleTicket.AsuntoTicket,
+                        SubjectEncoding = System.Text.Encoding.UTF8,
+                        From = new MailAddress("service.desk.mktg@adexperu.org.pe")
+                    };
+
+                    message.To.Add(detalleTicket.PropietarioTicket);
+
+                    client.Send(message);
+                    client.Dispose();
+
+                    mensaje = "Asignación y Notificación enviadas correctamente al cliente";
+                }
+            }
+            catch (Exception ex)
+            {
+                mensaje = "Error al enviar correo: " + ex.Message;
+            }
+
+            return mensaje;
+        }
+
+        public int GenerarTipoDeContenidoTicket(int id, int[] tipoDeContenido)
+        {
+            int valor = 0;
+            foreach (var item in tipoDeContenido)
+            {
+                valor = TDCTicketRepetido(id, item);
+                if (valor == 0)
+                {
+                    using (SqlConnection con = DAConexionBD.ObtenerConexion())
+                    {
+
+                        try
+                        {
+                            SqlCommand cmd = new SqlCommand("usp_asignar_TDC_Ticket", con);
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@id_ticket", id);
+                            cmd.Parameters.AddWithValue("@id_tipoDeContenido", item);
+
+                            con.Open();
+                            cmd.ExecuteNonQuery();
+
+                            //respuesta = true;
+                        }
+                        catch (Exception ex)
+                        {
+                            //respuesta = false;
+                        }
+                        finally
+                        {
+                            con.Close();
+                        }
+                    }
+                }
+            }
+            int numPiezas = NumeroDePiezas(id);
+            return numPiezas;
+        }
+
+        public int TDCTicketRepetido(int idTicket, int tipoDeContenido)
+        {
+
+            int valor = 0;
+            using (SqlConnection con = DAConexionBD.ObtenerConexion())
+            {
+                SqlCommand cmd = new SqlCommand("usp_Listar_TDC_Ticket", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@id_ticket", idTicket);
+                cmd.Parameters.AddWithValue("@id_tipoDeContenido", tipoDeContenido);
+
+                con.Open();
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                if (dr.HasRows)
+                {
+                    while (dr.Read())
+                    {
+                        if (dr.IsDBNull(1))
+                        {
+                            valor = 0;
+                        }
+                        else
+                        {
+                            valor = dr.GetInt32(1);
+                        }
+                    }
+                }
+                else
+                {
+                    valor = 0;
+                }
+                dr.Close();
+                con.Close();
+            }
+            return valor;
+        }
+
+        public int NumeroDePiezas(int idTicket)
+        {
+
+            int valor = 0;
+            using (SqlConnection con = DAConexionBD.ObtenerConexion())
+            {
+                SqlCommand cmd = new SqlCommand("usp_Obtener_numeroDePiezas", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@id_ticket", idTicket);
+
+                con.Open();
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                if (dr.HasRows)
+                {
+                    while (dr.Read())
+                    {
+                        if (dr.IsDBNull(0))
+                        {
+                            valor = 0;
+                        }
+                        else
+                        {
+                            valor = dr.GetInt32(0);
+                        }
+                    }
+                }
+                else
+                {
+                    valor = 0;
+                }
+                dr.Close();
+                con.Close();
+            }
+            return valor;
+        }
+        public string EliminarPedido(int id, string mensaje)
+        {
+            string respuesta = "";
+
+            var detalleTicket = DetallarTicket(id);
+            try
+            {
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+
+                using (SmtpClient client = new SmtpClient("smtp.office365.com", 587))
+                {
+                    var urlHelper = new UrlHelper(HttpContext.Current.Request.RequestContext);
+                    //string dominio = HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority) + urlHelper.Content("~");
+                    //string enlace = dominio + "Correo/AbrirCorreos/";
+
+                    client.EnableSsl = true;
+                    client.Credentials = new System.Net.NetworkCredential("service.desk.mktg@adexperu.org.pe", "@dex2022");
+                    MailMessage message = new MailMessage()
+                    {
+                        IsBodyHtml = true,
+                        Body = "Estimado(a) " + ": </br> </br>" +
+                                "<b>Su solicitud: </b> </br>" +
+                                "<b>Asunto: </b>" + detalleTicket.AsuntoTicket + "</br>" +
+                                "<b>Fecha Generación: </b>" + detalleTicket.FechaGeneracion + "</br>" +
+                                "Ha sido desestimada por: </br> </br>" +
+                                mensaje + "</br>" + "</br>" +
+                                //"<b>Asunto: </b>" + detalleTicket.AsuntoTicket + "</br>" +
+                                //"<b>Fecha Generación: </b>" + detalleTicket.FechaGeneracion + "</br>" +
+                                //"<b>Fecha Cierre: </b>" + detalleTicket.GetFechaFormateada(detalleTicket.FechaCierre) + "</br>" +
+                                //"<b>Categoría: </b>" + detalleTicket.CategoriaTicket + "</br>" +
+                                //"<b>Subcategoría: </b>" + detalleTicket.SubCategoriaTicket + "</br> </br>" +
+                                //"Puede revisar el ticket en el siguiente enlace: <a href='" + enlace + "' >Visualizar Ticket</a> </br> </br> " +
+                                "<b>¡Favor de NO responder este correo!</b> </br> </br>" +
+                                "Atemtamente, </br>" +
+                                "Mesa de Servicio ADEX Marketing",
+
+                        BodyEncoding = System.Text.Encoding.UTF8,
+                        Subject = "Solicitud Rechazada - " + detalleTicket.AsuntoTicket,
+                        SubjectEncoding = System.Text.Encoding.UTF8,
+                        From = new MailAddress("service.desk.mktg@adexperu.org.pe")
+                    };
+
+                    message.To.Add(usuario.CorreoUsuario);
+
+                    client.Send(message);
+                    client.Dispose();
+
+                    ActualizarEstadoTicket(id, 6);
+
+                    mensaje = "Notificación eliminada correctamente";
+                }
+            }
+            catch (Exception ex)
+            {
+                respuesta = "Error al enviar correo: " + ex.Message;
+            }
+
+            return respuesta;
+        }
+
+        public string EnviarActualizacionDeEstadoTicket(int idTicket)
+        {
+            string mensaje = "";
+            BE.ViewModels.DetalleTicketViewModel detalleTicket = DetallarTicket(idTicket);
+            try
+            {
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+
+                using (SmtpClient client = new SmtpClient("smtp.office365.com", 587))
+                {
+                    var urlHelper = new UrlHelper(HttpContext.Current.Request.RequestContext);
+                    string dominio = HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority) + urlHelper.Content("~");
+                    client.EnableSsl = true;
+                    client.Credentials = new System.Net.NetworkCredential("service.desk.mktg@adexperu.org.pe", "@dex2022");
+                    MailMessage message = new MailMessage()
+                    {
+                        IsBodyHtml = true,
+                        Body = "Estimado(a) " + ": </br>" +
+                                "Se ha actualizado su ticket: </br> </br>" +
+                                 "<b>Asunto: </b>" + detalleTicket.AsuntoTicket + "</br>" +
+                                "<b>Fecha de Generación: </b>" + detalleTicket.FechaGeneracion + "</br>" +
+                                "<b>Fecha de Entrega: </b>" + Convert.ToDateTime(detalleTicket.fechaEntrega).ToString("dd/MM/yyyy") + "</br>" +
+                                "<b>Etapa: </b>" + detalleTicket.EstadoTicket + "</br>" +
+                                "<b>Estado: </b>" + detalleTicket.etapa + "</br> </br>" +
+                                "Atemtamente, </br>" +
+                                "Mesa de Servicio ADEX Marketing",
+
+                        BodyEncoding = System.Text.Encoding.UTF8,
+                        Subject = "Ticket Actualizado - " + detalleTicket.AsuntoTicket,
+                        SubjectEncoding = System.Text.Encoding.UTF8,
+                        From = new MailAddress("service.desk.mktg@adexperu.org.pe")
+                    };
+
+                    message.To.Add(detalleTicket.PropietarioTicket);
+
+                    client.Send(message);
+                    client.Dispose();
+
+                    mensaje = "Asignación y Notificación enviadas correctamente";
+                }
+            }
+            catch (Exception ex)
+            {
+                mensaje = "Error al enviar correo: " + ex.Message;
+            }
+
+            return mensaje;
+        }
+
+        public string ActualizarFechaTicket(int idTicket, DateTime fechaEntrega)
+        {
+            string mensaje = "";
+
+            using (SqlConnection con = DAConexionBD.ObtenerConexion())
+            {
+                try
+                {
+                    con.Open();
+                    SqlCommand cmd = new SqlCommand("usp_Actualizar_Fecha_Ticket", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@id_ticket", idTicket);
+                    cmd.Parameters.AddWithValue("@fechaEntrega", fechaEntrega);
+
+                    if (cmd.ExecuteNonQuery() >= 1)
+                    {
+                        mensaje = "Fecha actualizada correctamente";
+                    }
+                    else
+                    {
+                        mensaje = "Error: No se pudo actualizar la fecha";
+                    }
+
+                    con.Close();
+                }
+                catch (Exception ex)
+                {
+                    mensaje = "Error: " + ex.Message;
+                }
+                finally
+                {
+                    con.Close();
+                }
+            }
+
+            return mensaje;
+        }
+
+        public string ActualizarPrioridad(int idTicket, DateTime fechaEntrega)
+        {
+            int pri = 0;
+            string mensaje = "";
+            //
+            DateTime hoy = DateTime.Now;
+            TimeSpan dias = (TimeSpan)(fechaEntrega - hoy);
+            int valPrioridad = dias.Days;
+            if (valPrioridad == 1 || valPrioridad == 0 || valPrioridad < 0)
+            {
+                pri = 1;
+            }
+            else
+            {
+                if (valPrioridad == 2 || valPrioridad == 3)
+                {
+                    pri = 2;
+                }
+                else
+                {
+                    pri = 3;
+                }
+            }
+            //
+            using (SqlConnection con = DAConexionBD.ObtenerConexion())
+            {
+                try
+                {
+                    con.Open();
+                    SqlCommand cmd = new SqlCommand("usp_Actualizar_Prioridad", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@id_ticket", idTicket);
+                    cmd.Parameters.AddWithValue("@prioridad", pri);
+
+                    if (cmd.ExecuteNonQuery() >= 1)
+                    {
+                        mensaje = "Prioridad actualizada correctamente";
+                    }
+                    else
+                    {
+                        mensaje = "Error: No se pudo actualizar la fecha";
+                    }
+
+                    con.Close();
+                }
+                catch (Exception ex)
+                {
+                    mensaje = "Error: " + ex.Message;
+                }
+                finally
+                {
+                    con.Close();
+                }
+            }
+
+            return mensaje;
+        }
     }
 }

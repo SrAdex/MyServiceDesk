@@ -18,7 +18,7 @@ using DA.Enums;
 
 namespace DA
 {
-    internal class DACorreo
+    public class DACorreo
     {
         private readonly DAUtilidades gestionUtilidades = new DAUtilidades();
 

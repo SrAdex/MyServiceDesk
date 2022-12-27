@@ -171,5 +171,37 @@ namespace DA
 
             return direccionesCorreo;
         }
+
+        public List<BE.TDCxTicket> ListarTipoDeContenidoPorID()
+        {
+            List<BE.TDCxTicket> TDCxTickets = new List<BE.TDCxTicket>();
+
+            using (SqlConnection con = DAConexionBD.ObtenerConexion())
+            {
+                SqlCommand cmd = new SqlCommand("usp_Listar_TipoDeContenido_por_IdTicket", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                //cmd.Parameters.AddWithValue("@id_ticket", idTicket);
+
+                con.Open();
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    BE.TDCxTicket TDCxTicket = new BE.TDCxTicket
+                    {
+                        id_ticket = dr.GetInt32(0),
+                        id_tipoDeContenido = dr.GetInt32(1),
+                        tipocontenidoDesc = dr.GetString(2)
+                    };
+
+                    TDCxTickets.Add(TDCxTicket);
+                }
+
+
+                dr.Close();
+                con.Close();
+            }
+
+            return TDCxTickets;
+        }
     }
 }

@@ -59,7 +59,7 @@ namespace MyServiceDesk.Controllers
             }
             else
             {
-                TempData["mensaje"] = "No tiene un usuario registrado";
+                TempData["mensaje"] = "Usuario y/o contraseña errónea";
                 //return View();
                 return RedirectToAction("Login", "Account");
             }
