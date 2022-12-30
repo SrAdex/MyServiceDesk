@@ -154,6 +154,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CategoriaController.cs" />
     <Compile Include="Controllers\CorreoController.cs" />
+    <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\EncuestasController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\TicketController.cs" />
@@ -872,6 +873,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\loader.css" />
     <Content Include="Content\LoginStyles.css" />
+    <Content Include="css\mySite.css" />
     <Content Include="css\sb-admin-2.css" />
     <Content Include="css\sb-admin-2.min.css" />
     <Content Include="dist\css\icons\font-awesome\css\fa-brands.css" />
@@ -1152,11 +1154,13 @@
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Ticket\Listado.cshtml" />
     <Content Include="Views\Ticket\MisTickets.cshtml" />
+    <Content Include="Views\Categoria\Listado.cshtml" />
+    <Content Include="Views\Shared\_LayoutEncuestas.cshtml" />
+    <Content Include="Views\Dashboard\Dashboard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
-    <Folder Include="Views\Categoria\" />
     <Folder Include="Views\Correo\" />
     <Folder Include="Views\Encuestas\" />
     <Folder Include="Views\Usuario\" />

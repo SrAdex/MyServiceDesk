@@ -1,0 +1,420 @@
+﻿@using BE.ViewModels
+@using BE;
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<UsuarioViewModel> usuariosResponsables = ViewBag.responsables as List<UsuarioViewModel>;
+    List<BEDashboard> dashboard = ViewBag.TicketsXUsuario as List<BEDashboard>;
+    List<BEEstado> etapas = ViewBag.estados as List<BEEstado>;
+    int DashboardTotalDeTickets = ViewBag.DashboardTotalDeTickets;
+    int DashboardTotalEncuestas = ViewBag.DashboardTotalEncuestas;
+    int DashboardTotalTicketsRecibidos = ViewBag.DashboardTotalTicketsRecibidos;
+    int DashboardTotalUsuariosActivos = ViewBag.DashboardTotalUsuariosActivos;
+
+}
+<div class="container-fluid" ">
+    <div class="row">
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Total de Tickets Recibidos
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@DashboardTotalDeTickets</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-envelope fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Total de Tickets Asignados
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@DashboardTotalTicketsRecibidos</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-check-square fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Total de Encuestas Realizadas
+                            </div>
+                            <div class="row no-gutters align-items-center">
+                                <div class="col-auto">
+                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">@DashboardTotalEncuestas</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pending Requests Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Total de Usuarios Activos
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@DashboardTotalUsuariosActivos</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-user fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+
+    <!-- Area Chart -->
+    <div class="col-xl-8 col-lg-7">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Total de Tickets recibidos por Mes</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                <div class="">
+                    <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                    <canvas id="myBarChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pie Chart -->
+    <div class="col-xl-4 col-lg-5">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Tickets por Estado</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                <div class="">
+                    <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                    <canvas id="myBarChart2"></canvas>
+                </div>
+                @*<div class="mt-4 text-center small">
+                        <span class="mr-2">
+                            <i class="fas fa-circle text-primary"></i> Direct
+                        </span>
+                        <span class="mr-2">
+                            <i class="fas fa-circle text-success"></i> Social
+                        </span>
+                        <span class="mr-2">
+                            <i class="fas fa-circle text-info"></i> Referral
+                        </span>
+                    </div>*@
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    @foreach (var itemUsu in usuariosResponsables)
+    {
+        <div class="col-xl-6 col-lg-5">
+            <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Reporte de Tickets de @itemUsu.NombreCompleto</h6>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-xs table-hover" id="dataTableTickets" cellspacing="0">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th width="60%">Usuario</th>
+                                    <th width="30%">Estado</th>
+                                    <th width="10%">Cantidad</th>
+                                </tr>
+                            </thead>
+                            @foreach (var itemDash in dashboard)
+                            {
+
+                                if (itemUsu.IdUsuario == Convert.ToInt32(itemDash.Dashboard_TicketsXUsuario_IdUsuario))
+                                {
+                                    <tbody>
+                                        <tr>
+                                            <td class="td-sistema">
+                                                @itemDash.Dashboard_TicketsXUsuario_NombreCompleto
+                                            </td>
+
+                                            @foreach (var itemEtapa in etapas)
+                                            {
+                                                if (Convert.ToInt32(itemDash.Dashboard_TicketsXUsuario_IdEstado) == itemEtapa.IdEstado)
+                                                {
+                                                    <td class="td-sistema" style="text-align: left;">
+                                                        @itemEtapa.Nombre
+                                                    </td>
+                                                }
+                                            }
+
+
+                                            <td class="td-sistema" style="text-align: center;">
+                                                @itemDash.Dashboard_TicketsXUsuario_Count
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                }
+
+                            }
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+</div>
+
+
+@section scripts{
+    <script>
+
+         jQuery.ajax({
+                url: '@Url.Action("Reporte1", "Dashboard")',
+                type: "GET",
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+
+                    /*console.log(data);*/
+
+                    var arrayMeses = [];
+                    var arrayCantidad = [];
+
+                    for (var i = 0; i < data.length; i++) {
+
+                        /*console.log(data[i].mes)*/
+                        arrayMeses.push(data[i].Dashboard_TicketsXFechaGen_MesName)
+                        arrayCantidad.push(data[i].Dashboard_TicketsXFechaGen_Count)
+                    }
+
+                    console.log(arrayMeses)
+                    console.log(arrayCantidad)
+
+                    var controlBar1 = document.getElementById("myBarChart");
+
+                    var graficoBar1 = new Chart(controlBar1, {
+                        type: 'bar',
+                        data: {
+                            labels: arrayMeses,
+                            datasets: [{
+                                label: "Total de Tickets Recibidos",
+                                /*backgroundColor: "#0800B1",*/
+                                backgroundColor: ["#E7EA16"],
+                                borderColor: "#000000",
+                                borderWidth: 0,
+                                data: arrayCantidad,
+                            }],
+                        },
+                        options: {
+                            scales: {
+                                xAxes: [{
+                                    gridLines: {
+                                        display: true
+                                    },
+                                }],
+                                yAxes: [{
+                                    ticks: {
+                                        min: 0,
+                                    },
+                                    gridLines: {
+                                        display: true
+                                    }
+                                }],
+                            },
+                            legend: {
+                                display: true
+                            }
+                        }
+                    });
+
+
+                },
+                error: function (error) {
+                    console.log(error)
+                }
+        });
+
+         jQuery.ajax({
+                url: '@Url.Action("Reporte2", "Dashboard")',
+                type: "GET",
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+
+                    /*console.log(data);*/
+
+                    var arrayEstado = [];
+                    var arrayCantidad2 = [];
+
+                    for (var i = 0; i < data.length; i++) {
+
+                        /*console.log(data[i].mes)*/
+                        arrayEstado.push(data[i].Dashboard_TicketsXEstado_EstadoName)
+                        arrayCantidad2.push(data[i].Dashboard_TicketsXEstado_Count)
+                    }
+
+                    console.log(arrayEstado)
+                    console.log(arrayCantidad2)
+
+                    var controlBar1 = document.getElementById("myBarChart2");
+
+                    var graficoBar1 = new Chart(controlBar1, {
+                        type: 'doughnut',
+                        data: {
+                            labels: arrayEstado,
+                            datasets: [{
+                                label: "Total de Tickets Recibidos",
+                                /*backgroundColor: "#0800B1",*/
+                                backgroundColor: [
+                                    'rgb(255, 99, 132)',
+                                    'rgb(54, 162, 235)',
+                                    'rgb(255, 205, 86)',
+                                    'rgb(215, 79, 255)',
+                                    'rgb(149, 252, 255)',
+                                    'rgb(223, 255, 63)'
+                                ],
+                                hoverOffset: 4,
+                                data: arrayCantidad2,
+                            }],
+                        },
+                        options: {
+                            scales: {
+                                xAxes: [{
+                                    gridLines: {
+                                        display: true
+                                    },
+                                }],
+                                yAxes: [{
+                                    ticks: {
+                                        min: 0,
+                                    },
+                                    gridLines: {
+                                        display: true
+                                    }
+                                }],
+                            },
+                            legend: {
+                                display: true
+                            }
+                        }
+                    });
+
+
+                },
+                error: function (error) {
+                    console.log(error)
+                }
+         });
+
+         jQuery.ajax({
+                url: '@Url.Action("Reporte2", "Dashboard")',
+                type: "GET",
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+
+                    /*console.log(data);*/
+
+                    var arrayEstado = [];
+                    var arrayCantidad2 = [];
+
+                    for (var i = 0; i < data.length; i++) {
+
+                        /*console.log(data[i].mes)*/
+                        arrayEstado.push(data[i].Dashboard_TicketsXEstado_EstadoName)
+                        arrayCantidad2.push(data[i].Dashboard_TicketsXEstado_Count)
+                    }
+
+                    console.log(arrayEstado)
+                    console.log(arrayCantidad2)
+
+                    var controlBar1 = document.getElementById("myBarChart2");
+
+                    var graficoBar1 = new Chart(controlBar1, {
+                        type: 'doughnut',
+                        data: {
+                            labels: arrayEstado,
+                            datasets: [{
+                                label: "Total",
+                                /*backgroundColor: "#0800B1",*/
+                                backgroundColor: [
+                                    'rgb(255, 0, 132)',
+                                    'rgb(54, 162, 235)',
+                                    'rgb(255, 205, 86)',
+                                    'rgb(215, 79, 255)',
+                                    'rgb(215, 50, 255)',
+                                    'rgb(215, 80, 255)'
+                                ],
+                                hoverOffset: 4,
+                                data: arrayCantidad2,
+                            }],
+                        },
+                        options: {
+                            scales: {
+                                xAxes: [{
+                                    gridLines: {
+                                        display: true
+                                    },
+                                }],
+                                yAxes: [{
+                                    ticks: {
+                                        min: 0,
+                                    },
+                                    gridLines: {
+                                        display: true
+                                    }
+                                }],
+                            },
+                            legend: {
+                                display: true
+                            }
+                        }
+                    });
+
+
+                },
+                error: function (error) {
+                    console.log(error)
+                }
+        });
+    </script>
+
+}
+

@@ -1,0 +1,571 @@
+﻿@model IEnumerable<BE.ViewModels.TicketViewModel>
+@using BE.ViewModels
+@using BE;
+@{
+    ViewBag.Title = "Listado de Tickets";
+
+    List<UsuarioViewModel> usuariosResponsables = ViewBag.responsables as List<UsuarioViewModel>;
+    List<BEEstado> estados = ViewBag.estados as List<BEEstado>;
+    List<TDCxTicket> tipoDeContenidosX = ViewBag.listarTipoDeContenido as List<TDCxTicket>;
+    List<int> filtroEstado = ViewBag.filtroEstado;
+    List<int> filtroResponsable = ViewBag.filtroResponsable;
+}
+
+<div class="row">
+    <div class="col-md-12 col-lg-3 col-xl-3">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-header-text">Filtros de Tickets</h5>
+            </div>
+            <div class="card-block accordion-block">
+                <div id="accordion" role="tablist" aria-multiselectable="true">
+                    @using (Html.BeginForm("EstablecerFiltrosGeneral", "Ticket", FormMethod.Get))
+                    {
+                        <div class="accordion-panel">
+                            <div class="accordion-heading" role="tab"
+                                 id="headingOne">
+                                <h3 class="card-title accordion-title">
+                                    <a class="accordion-msg waves-effect waves-dark d-flex justify-content-between"
+                                       data-toggle="collapse"
+                                       data-parent="#accordion" href="#collapseOne"
+                                       aria-expanded="true"
+                                       aria-controls="collapseOne">
+                                        Por estado <i class="fas fa-caret-down"></i>
+                                    </a>
+                                </h3>
+                            </div>
+                            <div id="collapseOne" class="panel-collapse collapse show"
+                                 role="tabpanel" aria-labelledby="headingOne">
+                                <div class="accordion-content accordion-desc">
+
+                                    @foreach (var estado in estados)
+                                    {
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="@estado.IdEstado" name="estados" id="@estado.Nombre"
+                                                   @(filtroEstado.Contains(estado.IdEstado) ? "checked" : "" ) />
+                                            <label class="form-check-label mt-1" for="@estado.Nombre" title="@estado.Nombre">
+                                                @estado.Nombre
+                                            </label>
+                                        </div>
+
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-panel">
+                            <div class="accordion-heading" role="tab"
+                                 id="headingOne">
+                                <h3 class="card-title accordion-title">
+                                    <a class="accordion-msg waves-effect waves-dark d-flex justify-content-between"
+                                       data-toggle="collapse"
+                                       data-parent="#accordion" href="#collapseTwo"
+                                       aria-expanded="true"
+                                       aria-controls="collapseOne">
+                                        Por responsable <i class="fas fa-caret-down"></i>
+                                    </a>
+                                </h3>
+                            </div>
+                            <div id="collapseTwo" class="panel-collapse collapse show"
+                                 role="tabpanel" aria-labelledby="headingOne">
+                                <div class="accordion-content accordion-desc">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="0" name="responsables" id="chkSinResponsableAsignado"
+                                               @(filtroResponsable.Contains(0) ? "checked" : "") />
+                                        <label class="form-check-label mt-1 texto-ellipsis" for="chkSinResponsableAsignado" title="Sin Responsable Asignado">
+                                            Sin Responsable Asignado
+                                        </label>
+                                    </div>
+                                    @if (ViewBag.esAdmin != false)
+                                    {
+                                        foreach (var responsable in usuariosResponsables)
+                                        {
+                                            if (responsable.IdUsuario != 1)
+                                            {
+
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" value="@responsable.IdUsuario" name="responsables" id="@responsable.NombreCompleto"
+                                                           @(filtroResponsable.Contains(responsable.IdUsuario) ? "checked" : "") />
+                                                    <label class="form-check-label mt-1 texto-ellipsis" for="@responsable.NombreCompleto" title="@responsable.NombreCompleto">
+                                                        @responsable.NombreCompleto
+                                                    </label>
+                                                </div>
+
+                                            }
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <button type="submit" class="btn btn-sm btn-primary col-auto m-auto">
+                                Filtrar <i class="fas fa-filter"></i>
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12 col-lg-9 col-xl-9">
+        <!-- Basic table card start -->
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+                <h5>Listado General de Tickets</h5>
+                <a href="@Url.Action("GenerarReporteTicketsGeneral", "Ticket")" class="btn btn-sm btn-outline-success col-auto mb-3">
+                    Generar Reporte Excel <i class="fas fa-file-excel fa-lg"></i>
+                </a>
+            </div>
+            <div class="card-block table-border-style">
+                @if (TempData["mensaje"] != null)
+                {
+                    <div class="alert @TempData["tipoAlerta"]" role="alert">
+                        @TempData["mensaje"]
+                    </div>
+                }
+                <div class="table-responsive">
+                    <table class="table table-xs table-hover" id="dataTableTickets">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Fec. Gen.</th>
+                                <th>Fec. Asig.</th>
+                                <th>Días en MKTG</th>
+                                <th>Tema</th>
+                                <th>Tipo de Contenido</th>
+                                <th># de Piezas</th>
+                                <th>Descripcion</th>
+                                <th>Estado</th>
+                                <th>Responsable</th>
+                                <th>Fec. Entrega.</th>
+                                <th>Etapa</th>
+                                <th>Prioridad</th>
+                                <th># de dias Vencido</th>
+                                <th>Operaciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var ticket in Model)
+                            {
+                                <tr>
+                                    <td class="td-sistema" data-order="@ticket.GetFechaFormateada("", ticket.FechaGeneracion)">
+                                        @ticket.GetFechaFormateada("tabla", ticket.FechaGeneracion)
+                                    </td>
+                                    <td class="td-sistema" data-order="@ticket.GetFechaFormateada("", ticket.FechaAsignacion)">
+                                        @ticket.GetFechaFormateada("tabla", ticket.FechaAsignacion)
+                                    </td>
+                                    <td class="fa-align-center">
+                                        @if (ticket.diasEnMKTG != 0)
+                                        {
+                                            @ticket.diasEnMKTG
+                                        }
+                                        else
+                                        {
+                                            <label>-</label>
+                                        }
+                                    </td>
+                                    <td class="td-sistema">
+                                        @if (ticket.diasEnMKTG != 0)
+                                        {
+                                            @ticket.tema
+                                        }
+                                        else
+                                        {
+                                            <label>-</label>
+                                        }
+                                    </td>
+                                    <td class="td-sistema">
+                                        <ul>
+                                            @foreach (var tipoContenido in tipoDeContenidosX)
+                                            {
+                                                if (tipoContenido.id_ticket == ticket.IdTicket)
+                                                {
+                                                    <li>
+                                                        ⚫ @tipoContenido.tipocontenidoDesc
+                                                    </li>
+                                                }
+                                            }
+                                        </ul>
+                                    </td>
+                                    <td class="fa-align-center">
+                                        @if (ticket.diasEnMKTG != 0)
+                                        {
+                                            @ticket.numeroPiezas
+                                        }
+                                        else
+                                        {
+                                            <label>-</label>
+                                        }
+                                    </td>
+                                    <td class="td-sistema">
+                                        @if (ticket.diasEnMKTG != 0)
+                                        {
+                                            @ticket.descripcion
+                                        }
+                                        else
+                                        {
+                                            <label>-</label>
+                                        }
+                                    </td>
+                                    
+                                    <td class="td-sistema">
+                                        <div class="circulo" title="@ticket.UsuarioResponsable">
+                                            @ticket.InicialesResponsable
+                                        </div>
+                                    </td>
+                                    <td class="td-sistema">
+                                        @if (ticket.FechaEntrega != null)
+                                        {
+                                            @Convert.ToDateTime(ticket.FechaEntrega).ToString("dd/MM/yyyy")
+                                        }
+                                        else
+                                        {
+                                            <label>-</label>
+                                        }
+
+                                    </td>
+                                    <td class="td-sistema">
+                                        <select name="select" id="@("cboEstado_" + ticket.IdTicket)" class="custom-select" onchange="actualizaEstado(@ticket.IdTicket)">
+                                            @foreach (var estado in estados)
+                                            {
+                                                <option value="@estado.IdEstado" @(ticket.EstadoTicket == estado.Nombre ? "selected" : "")>
+                                                    @estado.Nombre
+                                                </option>
+                                            }
+                                        </select>
+                                    </td>
+                                    
+                                    <td class="fa-align-center">
+                                        @if (ticket.diasVencido == 0)
+                                        {
+                                            <label title="Estás a tiempo">
+                                                -
+                                            </label>
+                                        }
+                                        else
+                                        {
+                                            <label class="badge badge-danger" title="@ticket.diasVencido">
+                                                @ticket.diasVencido
+                                            </label>
+                                        }
+
+
+                                    </td>
+                                    <td class="td-sistema">
+                                        <a href="@Url.Action("AbrirCorreos", "Correo", new { id = ticket.IdTicket})">
+                                            <i class="ti-email"></i>
+                                        </a>
+                                        <a href="#" onclick="modalAsignacion(@ticket.IdTicket)">
+                                            <i class="fas fa-user-plus"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalAsignacion" class="modal fade" tabindex="-1">
+
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            @using (Html.BeginForm("GenerarFlujo", "Ticket", FormMethod.Post))
+            {
+                <div class="modal-header">
+                    <h3>Asignación y Categorización de Ticket</h3>
+                    <button class="close" data-dismiss="modal" aria-label="Cerrar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-form-label">Responsable</label>
+                                <select id="idUsuarioResponsable" name="idUsuarioResponsable" class="custom-select custom-select" data-width="100%" data-live-search="true">
+                                    @foreach (var responsable in usuariosResponsables)
+                                    {
+                                        if (responsable.IdUsuario != 0)
+                                        {
+                                            <option value="@responsable.IdUsuario">@responsable.NombreCompleto</option>
+                                        }
+                                    }
+                                </select>
+                                @Html.Hidden("idTicket", "", new { id = "txtIdTicket" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-form-label">Fecha de Entrega</label>
+                                <div class="md-form md-outline input-with-post-icon datepicker" id="prefill">
+                                    <input required placeholder="Select date" type="date" id="fechaEntrega" class="form-control" name="fechaEntrega">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-form-label">Tema</label>
+                                <input type="text" class="form-control" id="tema" name="tema">
+                            </div>
+                        </div>
+                       
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-form-label">Descripción</label>
+                                <textarea class="form-control" id="descripcion" name="descripcion" rows="6"></textarea>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-danger mr-3" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-sm btn-primary mr-3 btnAsignar">Asignar</button>
+                </div>
+            }
+
+        </div>
+    </div>
+
+</div>
+
+<div id="modalDetalle" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Detalles de la Encuesta</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <div class="col-6">
+                        <label class="col-form-label">Ticket</label>
+                        <input id="txtAsuntoTicket" class="form-control" readonly value="" />
+                    </div>
+                    <div class="col-6">
+                        <label class="col-form-label">Satisfacción</label>
+                        <input id="satisfaccion" class="form-control" readonly value="" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-12">
+                        <label class="col-form-label">Comentarios</label>
+                        <textarea id="comentarios" class="form-control" readonly rows="3"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalRechazo" class="modal fade" tabindex="-1">
+
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            @using (Html.BeginForm("EnviarRespuestaDeRechazo", "Ticket", FormMethod.Post))
+            {
+
+                <div class="modal-header">
+                    <h3>Rechazar Ticket</h3>
+                    <button class="close" data-dismiss="modal" aria-label="Cerrar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label class="col-form-label">Motivo de Rechazo</label>
+
+                        <textarea class="form-control" id="textoRechazo" name="textoRechazo" rows="4"></textarea>
+                    </div>
+
+                </div>
+
+                @Html.Hidden("idTicket", "", new { id = "txtIdTicket2" })
+
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-danger mr-3" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-sm btn-primary mr-3 btnAsignar">Enviar</button>
+                </div>
+            }
+
+        </div>
+    </div>
+
+</div>
+
+
+@section Scripts {
+
+    <script>
+
+
+
+        $(document).ready(function () {
+
+            var comboCategorias = $("#cboCategoria");
+
+            function refresh() {
+                $.ajax({
+                    url: '@Url.Action("ListarSubCategorias", "Util")' + '?idCategoriaSuperior=' + comboCategorias.val(),
+                    type: 'GET',
+                    success: function (subCategorias) {
+                        $("#cboSubCategoria").empty();
+                        $("#cboSubCategoria").append('<option value="">--Seleccione--</option>');
+                        $(subCategorias).each(function (i, v) { // indice, valor
+                            $("#cboSubCategoria").append('<option value="' + v.IdCategoria + '">' + v.Nombre + '</option>');
+                        })
+                    },
+
+                });
+            };
+
+            comboCategorias.on('change', function () {
+                refresh();
+            })
+
+            refresh();
+
+        });
+
+        function modalAsignacion(idTicket) {
+            $.ajax({
+                url: '@Url.Action("ListarDatosAsignacion", "Ticket")' + '?idTicket=' + idTicket,
+                    success: function (respuesta) {
+                        setUsuarioAsignado(respuesta.IdUsuarioResponsable);
+                        setCategoria(respuesta.IdCategoria);
+                        setSubCategoria(respuesta.IdSubcategoria);
+                    },
+                    error: function (error) {
+                        notify("top", "right", "fas fa-exclamation-triangle", "danger", null, null, error.responseText);
+                    }
+                });
+            $("#txtIdTicket").val(idTicket).change();
+            $("#modalAsignacion").modal('show');
+        }
+
+        function modalRechazo(idTicket) {
+
+
+            $("#txtIdTicket2").val(idTicket).change();
+            $("#modalRechazo").modal('show');
+            alert(idTicket);
+
+        }
+
+        function actualizaEstado(idTicket) {
+            /*alert(idTicket);*/
+            var select = document.getElementById("cboEstado_" + idTicket);
+            var idEstado = select.options[select.selectedIndex].value;
+
+            $.post('@Url.Action("ActualizarEstadoTicket")', { idTicket: idTicket, idEstado: idEstado },
+                function (respuesta) {
+                    console.log(respuesta);
+                    if (respuesta.success) {
+                        notify("top", "right", "fa fa-check", "success", null, null, respuesta.mensaje)
+                    } else {
+                        notify("top", "right", "fas fa-exclamation-triangle", "danger", null, null, respuesta.mensaje)
+                    }
+
+                }).fail(function (error) {
+                    console.log(error);
+            });
+        }
+
+        function rechazarSolicitud(idTicket) {
+            alert(idTicket);
+            var textoRechazo = $('#textoRechazo').val().trim();
+
+            $.post('@Url.Action("EnviarRespuestaDeRechazo")', { idTicket: idTicket, textoRechazo: textoRechazo },
+                function (respuesta) {
+                    console.log(respuesta);
+                    //if (respuesta.success) {
+                    //    notify("top", "right", "fa fa-check", "success", null, null, respuesta.mensaje)
+                    //} else {
+                    //    notify("top", "right", "fas fa-exclamation-triangle", "danger", null, null, respuesta.mensaje)
+                    //}
+
+                }).fail(function (error) {
+                    console.log(error);
+            });
+        }
+
+        function verDetalle(idEncuesta) {
+            $.ajax({
+                url: '@Url.Action("DetalleEncuesta","Encuestas")?idTicket=' + idEncuesta,
+                success: function (respuesta) {
+                    setAsuntoTicket(respuesta.Asunto);
+                    setSatisfaccion(respuesta.Satisfaccion);
+                    setComentarios(respuesta.Comentario);
+                    console.log();
+                },
+                error: function (e) {
+                    console.log("No se ha podido obtener la información" + e);
+                }
+            });
+            $("#modalDetalle").modal('show');
+
+        }
+
+        function setAsuntoTicket(asunto) {
+            $("#txtAsuntoTicket").val(asunto);
+        }
+
+        function setSatisfaccion(satisfaccion) {
+            $("#satisfaccion").val(satisfaccion);
+        }
+        function setComentarios(comentarios) {
+            $("#comentarios").val(comentarios);
+        }
+
+        $(function () {
+            $('select').selectpicker();
+        });
+
+        function parseJsonDate(fechaJson) {
+            var dateString = fechaJson.substr(6);
+            var currentTime = new Date(parseInt(dateString));
+            var month = currentTime.getMonth() + 1;
+            var day = currentTime.getDate();
+            var year = currentTime.getFullYear();
+            var date = day + "/" + month + "/" + year;
+            return date;
+        }
+
+        var strValue = "@((string)TempData["mensaje"])";
+        if (strValue == "Asignado Correctamente") {
+            Swal.fire({
+                icon: 'success',
+                title: 'Listo',
+                text: 'Solicitud aceptada correctamente'
+            })
+        }
+        if (strValue == "Solicitud eliminada satisfactoriamente") {
+            Swal.fire({
+                icon: 'success',
+                title: 'Listo',
+                text: 'Solicitud eliminada satisfactoriamente'
+            })
+        }
+
+
+    </script>
+
+}

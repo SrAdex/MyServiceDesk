@@ -117,6 +117,7 @@
     <Compile Include="DAAdjunto.cs" />
     <Compile Include="DACategoria.cs" />
     <Compile Include="DACorreo.cs" />
+    <Compile Include="DADashboard.cs" />
     <Compile Include="DAEncuestas.cs" />
     <Compile Include="DAEstado.cs" />
     <Compile Include="DARol.cs" />

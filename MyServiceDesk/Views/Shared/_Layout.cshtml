@@ -25,9 +25,6 @@
     <!-- DataTable -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs5/dt-1.13.1/datatables.min.css" />
    
-
-    <!-- Custom fonts for this template-->
-    <link href="~/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
           rel="stylesheet">
     <link href="~/Content/loader.css" rel="stylesheet" />
@@ -105,20 +102,88 @@
                     Modulos
                 </div>
                 <!-- Nav Item - Pages Collapse Menu -->
-                <li class="nav-item">
-                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwoo"
-                       aria-expanded="true" aria-controls="collapseTwoo">
-                        <i class="fas fa-ticket-alt fa-lg"></i>
-                        <span>Tickets</span>
-                    </a>
-                    <div id="collapseTwoo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                        <div class="bg-white py-2 collapse-inner rounded">
-                            <h6 class="collapse-header">Opciones:</h6>
-                            @Html.ActionLink("Administrativo", "Listado", "Ticket", "", new { @class = "collapse-item" })
-                            @Html.ActionLink("Mi Lista", "MisTickets", "Ticket", "", new { @class = "collapse-item" })
+        <li class="nav-item">
+
+            <div class="accordion" id="accordionExample">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            Accordion Item #1
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
                         </div>
                     </div>
-                </li>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Accordion Item #2
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingThree">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            Accordion Item #3
+                        </button>
+                    </h2>
+                    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <a class="nav-link accordion-header" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                <i class="fas fa-ticket-alt fa-lg"></i>
+                <span>Tickets</span>
+            </a>
+
+
+            <div class="collapse" id="collapseExample">
+                <div class="card card-body">
+                    <h6 class="collapse-header">Opciones:</h6>
+                    @Html.ActionLink("Administrativo", "Listado", "Ticket", "", new { @class = "collapse-item" })
+                    @Html.ActionLink("Mi Lista", "MisTickets", "Ticket", "", new { @class = "collapse-item" })
+                </div>
+            </div>
+
+            <a class="nav-link dropdown-toggle" data-bs-toggle="collapse" href="#collapseExample2" role="button" aria-expanded="false" aria-controls="collapseExample">
+                <i class="fas fa-user fa-lg"></i>
+                <span>Usuarios</span>
+            </a>
+
+            <div class="collapse" id="collapseExample2">
+                <div class="card card-body">
+                    <h6 class="collapse-header">Opciones:</h6>
+                    @Html.ActionLink("Administrativo", "Listado", "Usuario", "", new { @class = "collapse-item" })
+                </div>
+            </div>
+
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwoo"
+               aria-expanded="true" aria-controls="collapseTwoo">
+                <i class="fas fa-ticket-alt fa-lg"></i>
+                <span>Tickets</span>
+            </a>
+            <div id="collapseTwoo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Opciones:</h6>
+                    @Html.ActionLink("Administrativo", "Listado", "Ticket", "", new { @class = "collapse-item" })
+                    @Html.ActionLink("Mi Lista", "MisTickets", "Ticket", "", new { @class = "collapse-item" })
+                </div>
+            </div>
+        </li>
 
                 <!-- Nav Item - Utilities Collapse Menu -->
                 <li class="nav-item">

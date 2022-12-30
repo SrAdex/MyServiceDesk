@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="BECategoria.cs" />
     <Compile Include="BECorreo.cs" />
+    <Compile Include="BEDashboard.cs" />
     <Compile Include="BEDireccionCorreo.cs" />
     <Compile Include="BEAdjunto.cs" />
     <Compile Include="BEEncuesta.cs" />
