@@ -26,7 +26,6 @@ namespace MyServiceDesk.Controllers
 
         [Autorizacion(operacion: Enums.Operacion.ListadoTickets)]
         public ActionResult Listado()
-
         {
             IEnumerable<BE.ViewModels.TicketViewModel> tickets = new List<BE.ViewModels.TicketViewModel>();
 

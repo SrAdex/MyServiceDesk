@@ -1,33 +1,32 @@
 ﻿@model IEnumerable<BE.ViewModels.TicketViewModel>
-@using BE.ViewModels;
+@using BE.ViewModels
 @using BE;
 @{
     ViewBag.Title = "Listado de Tickets";
 
     List<UsuarioViewModel> usuariosResponsables = ViewBag.responsables as List<UsuarioViewModel>;
     List<BEEstado> estados = ViewBag.estados as List<BEEstado>;
-    //List<Etapa> etapas = ViewBag.etapas as List<Etapa>;
-    //List<TipoDeContenido> tipoDeContenidos = ViewBag.tipoDeContenidos as List<TipoDeContenido>;
     List<TDCxTicket> tipoDeContenidosX = ViewBag.listarTipoDeContenido as List<TDCxTicket>;
-    //List<Prioridad> prioridades = ViewBag.prioridades as List<Prioridad>;
     List<int> filtroEstado = ViewBag.filtroEstado;
     List<int> filtroResponsable = ViewBag.filtroResponsable;
 }
 
 <div class="row">
-    <div class="col-md-12 col-lg-3 col-xl-3">
-        <div class="card">
+    <div class="col-md-12 col-lg-3 col-xl-2">
+        <div class="card shadow mb-5">
             <div class="card-header">
                 <h5 class="card-header-text">Filtros de Tickets</h5>
             </div>
-            <div class="card-block accordion-block">
+
+
+            <div class="accordion">
                 <div id="accordion" role="tablist" aria-multiselectable="true">
                     @using (Html.BeginForm("EstablecerFiltrosGeneral", "Ticket", FormMethod.Get))
                     {
-                        <div class="accordion-panel">
-                            <div class="accordion-heading" role="tab"
+                        <div class="card m-b-0 border-top">
+                            <div class="card-body text-dark" role="tab"
                                  id="headingOne">
-                                <h3 class="card-title accordion-title">
+                                <h6 class="mb-0">
                                     <a class="accordion-msg waves-effect waves-dark d-flex justify-content-between"
                                        data-toggle="collapse"
                                        data-parent="#accordion" href="#collapseOne"
@@ -35,11 +34,11 @@
                                        aria-controls="collapseOne">
                                         Por estado <i class="fas fa-caret-down"></i>
                                     </a>
-                                </h3>
+                                </h6>
                             </div>
                             <div id="collapseOne" class="panel-collapse collapse show"
                                  role="tabpanel" aria-labelledby="headingOne">
-                                <div class="accordion-content accordion-desc">
+                                <div class="card-body widget-content" style="text-align:left">
 
                                     @foreach (var estado in estados)
                                     {
@@ -50,15 +49,16 @@
                                                 @estado.Nombre
                                             </label>
                                         </div>
-
+                                        <hr class="sidebar-divider d-none d-md-block">
                                     }
                                 </div>
                             </div>
                         </div>
-                        <div class="accordion-panel">
-                            <div class="accordion-heading" role="tab"
+
+                        <div class="card m-b-0 border-top">
+                            <div class="card-body" role="tab"
                                  id="headingOne">
-                                <h3 class="card-title accordion-title">
+                                <h6 class="mb-0">
                                     <a class="accordion-msg waves-effect waves-dark d-flex justify-content-between"
                                        data-toggle="collapse"
                                        data-parent="#accordion" href="#collapseTwo"
@@ -66,17 +66,18 @@
                                        aria-controls="collapseOne">
                                         Por responsable <i class="fas fa-caret-down"></i>
                                     </a>
-                                </h3>
+                                </h6>
                             </div>
                             <div id="collapseTwo" class="panel-collapse collapse show"
                                  role="tabpanel" aria-labelledby="headingOne">
-                                <div class="accordion-content accordion-desc">
-                                    <div class="form-check">
+                                <div class="card-body widget-content">
+                                    <div class="form-check" style="text-align:left">
                                         <input class="form-check-input" type="checkbox" value="0" name="responsables" id="chkSinResponsableAsignado"
                                                @(filtroResponsable.Contains(0) ? "checked" : "") />
                                         <label class="form-check-label mt-1 texto-ellipsis" for="chkSinResponsableAsignado" title="Sin Responsable Asignado">
                                             Sin Responsable Asignado
                                         </label>
+                                        <hr class="sidebar-divider d-none d-md-block">
                                     </div>
                                     @if (ViewBag.esAdmin != false)
                                     {
@@ -85,24 +86,29 @@
                                             if (responsable.IdUsuario != 1)
                                             {
 
-                                                <div class="form-check">
+                                                <div class="form-check" style="text-align:left">
                                                     <input class="form-check-input" type="checkbox" value="@responsable.IdUsuario" name="responsables" id="@responsable.NombreCompleto"
                                                            @(filtroResponsable.Contains(responsable.IdUsuario) ? "checked" : "") />
                                                     <label class="form-check-label mt-1 texto-ellipsis" for="@responsable.NombreCompleto" title="@responsable.NombreCompleto">
                                                         @responsable.NombreCompleto
                                                     </label>
                                                 </div>
-
+                                                <hr class="sidebar-divider d-none d-md-block">
                                             }
                                         }
                                     }
                                 </div>
                             </div>
                         </div>
-                        <div class="row mt-1">
-                            <button type="submit" class="btn btn-sm btn-primary col-auto m-auto">
-                                Filtrar <i class="fas fa-filter"></i>
-                            </button>
+
+                        <div class="card m-b-0 border-top">
+                            <div class="card-header" role="tab"
+                                 id="headingOne" style="text-align: center;">
+                                <button type="submit" class="btn btn-sm btn-primary col-auto m-auto">
+                                    Filtrar <i class="fas fa-filter"></i>
+                                </button>
+                            </div>
+
                         </div>
                     }
                 </div>
@@ -110,40 +116,32 @@
         </div>
     </div>
 
-    <div class="col-md-12 col-lg-9 col-xl-9">
+    <div class="col-md-12 col-lg-9 col-xl-10">
         <!-- Basic table card start -->
-        <div class="card">
+        <div class="card shadow mb-5">
             <div class="card-header d-flex justify-content-between">
                 <h5>Listado General de Tickets</h5>
                 <a href="@Url.Action("GenerarReporteTicketsGeneral", "Ticket")" class="btn btn-sm btn-outline-success col-auto mb-3">
                     Generar Reporte Excel <i class="fas fa-file-excel fa-lg"></i>
                 </a>
             </div>
-            <div class="card-block table-border-style">
-                @if (TempData["mensaje"] != null)
-                {
-                    <div class="alert @TempData["tipoAlerta"]" role="alert">
-                        @TempData["mensaje"]
-                    </div>
-                }
+            <div class="card-body">
+                @*@if (TempData["mensaje"] != null)
+                    {
+                        <div class="alert @TempData["tipoAlerta"]" role="alert">
+                            @TempData["mensaje"]
+                        </div>
+                    }*@
                 <div class="table-responsive">
-                    <table class="table table-xs table-hover" id="dataTableTickets">
+                    <table class="table table-xs table-hover border" id="dataTableTickets" cellspacing="0">
                         <thead class="table-dark">
                             <tr>
-                                <th>Fec. Gen.</th>
-                                <th>Fec. Asig.</th>
-                                <th>Días en MKTG</th>
-                                <th>Tema</th>
-                                <th>Tipo de Contenido</th>
-                                <th># de Piezas</th>
-                                <th>Descripcion</th>
-                                <th>Estado</th>
-                                <th>Responsable</th>
-                                <th>Fec. Entrega.</th>
-                                <th>Etapa</th>
-                                <th>Prioridad</th>
-                                <th># de dias Vencido</th>
-                                <th>Operaciones</th>
+                                <th class="text-center">Fec. Recepción</th>
+                                <th class="text-center">Fec. Entrega</th>
+                                <th class="text-center">Asunto</th>
+                                <th class="text-center">Responsable</th>
+                                <th class="text-center">Estado</th>
+                                <th class="text-center">Operaciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -153,88 +151,7 @@
                                     <td class="td-sistema" data-order="@ticket.GetFechaFormateada("", ticket.FechaGeneracion)">
                                         @ticket.GetFechaFormateada("tabla", ticket.FechaGeneracion)
                                     </td>
-                                    <td class="td-sistema" data-order="@ticket.GetFechaFormateada("", ticket.FechaAsignacion)">
-                                        @ticket.GetFechaFormateada("tabla", ticket.FechaAsignacion)
-                                    </td>
-                                    <td class="fa-align-center">
-                                        @if (ticket.diasEnMKTG != 0)
-                                        {
-                                            @ticket.diasEnMKTG
-                                        }
-                                        else
-                                        {
-                                            <label>-</label>
-                                        }
-                                    </td>
-                                    <td class="td-sistema">
-                                        @if (ticket.diasEnMKTG != 0)
-                                        {
-                                            @ticket.tema
-                                        }
-                                        else
-                                        {
-                                            <label>-</label>
-                                        }
-                                    </td>
-                                    <td class="td-sistema">
-                                        <ul>
-                                            @foreach (var tipoContenido in tipoDeContenidosX)
-                                            {
-                                                if (tipoContenido.id_ticket == ticket.IdTicket)
-                                                {
-                                                    <li>
-                                                        ⚫ @tipoContenido.tipocontenidoDesc
-                                                    </li>
-                                                }
-                                            }
-                                        </ul>
-                                    </td>
-                                    <td class="fa-align-center">
-                                        @if (ticket.diasEnMKTG != 0)
-                                        {
-                                            @ticket.numeroPiezas
-                                        }
-                                        else
-                                        {
-                                            <label>-</label>
-                                        }
-                                    </td>
-                                    <td class="td-sistema">
-                                        @if (ticket.diasEnMKTG != 0)
-                                        {
-                                            @ticket.descripcion
-                                        }
-                                        else
-                                        {
-                                            <label>-</label>
-                                        }
-                                    </td>
-                                    <td class="td-sistema">
-                                        @if (ticket.etapa != "")
-                                        {
-                                            foreach (var etapa in etapas)
-                                            {
-                                                if (ticket.etapa == etapa.descripcion)
-                                                {
-
-                                                    <label class="@etapa.clas" title="@etapa.descripcion">
-                                                        @ticket.etapa
-                                                    </label>
-                                                }
-                                            }
-                                        }
-                                        else
-                                        {
-                                            <label>-</label>
-                                        }
-
-                                    </td>
-                                    <td class="td-sistema">
-                                        <div class="circulo" title="@ticket.UsuarioResponsable">
-                                            @ticket.InicialesResponsable
-                                        </div>
-                                    </td>
-                                    <td class="td-sistema">
+                                    <td class="td-sistema" style="text-align: center;">
                                         @if (ticket.FechaEntrega != null)
                                         {
                                             @Convert.ToDateTime(ticket.FechaEntrega).ToString("dd/MM/yyyy")
@@ -245,8 +162,22 @@
                                         }
 
                                     </td>
+                                    
+                                    <td class="td-sistema" style="text-align: left;">
+                                        @ticket.AsuntoTicket
+                                    </td>
+                                    
+                                    <td class="td-sistema" style="text-align: center;">
+                                        <h5>
+                                            <div class="badge badge-info" title="@ticket.UsuarioResponsable">
+                                                @ticket.InicialesResponsable
+                                            </div>
+                                        </h5>
+
+                                    </td>
+                                    
                                     <td class="td-sistema">
-                                        <select name="select" id="@("cboEstado_" + ticket.IdTicket)" class="custom-select" onchange="actualizaEstado(@ticket.IdTicket)">
+                                        <select name="select" id="@("cboEstado_" + ticket.IdTicket)" class="custom-select text-sm-left" onchange="actualizaEstado(@ticket.IdTicket)">
                                             @foreach (var estado in estados)
                                             {
                                                 <option value="@estado.IdEstado" @(ticket.EstadoTicket == estado.Nombre ? "selected" : "")>
@@ -255,50 +186,21 @@
                                             }
                                         </select>
                                     </td>
-                                    <td class="fa-align-center">
-                                        @if (ticket.prioridad != "")
-                                        {
-                                            foreach (var prioridad in prioridades)
-                                            {
-                                                if (ticket.prioridad == prioridad.descripcion)
-                                                {
-
-                                                    <label class="@prioridad.clas" title="@prioridad.plazo">
-
-                                                        @ticket.prioridad
-                                                    </label>
-                                                }
-                                            }
-                                        }
-                                        else
-                                        {
-                                            <label>-</label>
-                                        }
-
-                                    </td>
-                                    <td class="fa-align-center">
-                                        @if (ticket.diasVencido == 0)
-                                        {
-                                            <label title="Estás a tiempo">
-                                                -
-                                            </label>
-                                        }
-                                        else
-                                        {
-                                            <label class="badge badge-danger" title="@ticket.diasVencido">
-                                                @ticket.diasVencido
-                                            </label>
-                                        }
-
-
-                                    </td>
-                                    <td class="td-sistema">
+                                    
+                                    <td class="td-sistema" style="text-align: center;">
                                         <a href="@Url.Action("AbrirCorreos", "Correo", new { id = ticket.IdTicket})">
-                                            <i class="ti-email"></i>
+                                            <i class="fas fa-envelope fa-fw"></i>
                                         </a>
                                         <a href="#" onclick="modalAsignacion(@ticket.IdTicket)">
                                             <i class="fas fa-user-plus"></i>
                                         </a>
+                                        <a href="#" onclick="verDetalle('@ticket.IdTicket')">
+                                            <i class="fas fa-star"></i>
+                                        </a>
+                                        <a href="#" onclick="modalRechazo('@ticket.IdTicket')">
+                                            <i class="fas fa-ban"></i>
+                                        </a>
+                                        @*<i class="fas fa-star" onclick="verDetalle('@ticket.IdTicket')"></i>*@
                                     </td>
                                 </tr>
                             }
@@ -329,7 +231,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="col-form-label">Responsable</label>
-                                <select id="idUsuarioResponsable" name="idUsuarioResponsable" class="custom-select custom-select" data-width="100%" data-live-search="true">
+                                <select id="idUsuarioResponsable" required name="idUsuarioResponsable" class="custom-select custom-select" data-width="75%" data-live-search="true">
                                     @foreach (var responsable in usuariosResponsables)
                                     {
                                         if (responsable.IdUsuario != 0)
@@ -352,46 +254,35 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="form-group">
                                 <label class="col-form-label">Tema</label>
-                                <input type="text" class="form-control" id="tema" name="tema">
+                                <input type="text" required class="form-control" id="tema" name="tema">
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <!--<div class="col-md-6">
                             <div class="form-group">
                                 <label class="col-form-label">Prioridad</label>
-                                <select id="idPrioridad" name="idPrioridad" class="custom-select custom-select" data-width="100%" data-live-search="true">
-                                    @foreach (var prioridad in prioridades)
-                                    {
+                                <select id="idPrioridad" name="idPrioridad" required class="custom-select custom-select" data-width="100%" data-live-search="true">
+                                   //foreach (var prioridad in prioridades)
+                                   // {
                                         //if (responsable.IdUsuario != 1)
                                         //{
-                                        <option value="@prioridad.id_prioridad">@prioridad.descripcion</option>
-                                        @*}*@
-                                    }
+                                        <option value="prioridad.id_prioridad">prioridad.descripcion</option>-->
+                        @*}*@
+                        <!--//}
                                 </select>
                             </div>
-                        </div>
+                        </div>-->
                     </div>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="col-form-label">Descripción</label>
-                                <textarea class="form-control" id="descripcion" name="descripcion" rows="6"></textarea>
+                                <textarea class="form-control" required id="descripcion" name="descripcion" rows="5"></textarea>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <label class="col-form-label">Tipo De Contenido</label>
-                            <select id="tipoDeContenido" name="tipoDeContenido" class="custom-select custom-select" size="8" data-width="100%" data-live-search="true" multiple>
-                                @foreach (var tdc in tipoDeContenidos)
-                                {
-                                    //if (responsable.IdUsuario != 1)
-                                    //{
-                                    <option value="@tdc.id_tipocontenido">@tdc.descripcion</option>
-                                    @*}*@
-                                }
-                            </select>
-                        </div>
+                        
                     </div>
                 </div>
 
@@ -482,11 +373,72 @@
 
     <script>
 
+        let dataTable
+        let dataTableIsInitialized = false
+
+        //Parámetros de Datatable
+        const dataTableOptions = {
+            columnDefs: [
+                { className: "centered", targets: [0, 1, 2, 3, 4, 5] },
+                { orderable: false, targets: [3, 4, 5] },
+                { searchable: false, targets: [3, 4, 5] },
+                {width: "15%", targets: [4]}
+            ],
+            destroy: true,
+            language: {
+                "processing": "Procesando...",
+                "lengthMenu": "Mostrar _MENU_ registros",
+                "zeroRecords": "No se encontraron resultados",
+                "emptyTable": "Ningún dato disponible en esta tabla",
+                "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                "search": "Buscar:",
+                "infoThousands": ",",
+                "loadingRecords": "Cargando...",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Último",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                },
+                "aria": {
+                    "sortAscending": ": Activar para ordenar la columna de manera ascendente",
+                    "sortDescending": ": Activar para ordenar la columna de manera descendente"
+                }
+            }
+        }
+
+        window.addEventListener("load", async () => { await initDataTable(); })
+
+        const initDataTable = () => {
+
+            if (dataTableIsInitialized) {
+                dataTable.destroy()
+            }
+
+            dataTable = $('#dataTableTickets').DataTable(dataTableOptions)
+
+            dataTableIsInitialized = true
+        }
 
 
         $(document).ready(function () {
 
             var comboCategorias = $("#cboCategoria");
+
+            /*$('#dataTableTickets').DataTable();*/
+            var table = $('#dataTableTickets').removeAttr('width').DataTable({
+                scrollX: true,
+                scrollCollapse: true,
+                columnDefs: [
+                    { width: 105, targets: 0 }, //FechaGen
+                    { width: 200, targets: 2 }, //Asunto
+                    { width: 150, targets: 3 }, //Tema
+                    { width: 150, targets: 5 }, //Etapa
+                ],
+                fixedColumns: true
+            });
+
 
             function refresh() {
                 $.ajax({
@@ -514,10 +466,15 @@
         function modalAsignacion(idTicket) {
             $.ajax({
                 url: '@Url.Action("ListarDatosAsignacion", "Ticket")' + '?idTicket=' + idTicket,
-                    success: function (respuesta) {
+                success: function (respuesta) {
+                    console.log(respuesta);
                         setUsuarioAsignado(respuesta.IdUsuarioResponsable);
-                        setCategoria(respuesta.IdCategoria);
-                        setSubCategoria(respuesta.IdSubcategoria);
+                        setTema(respuesta.tema);
+                        setDescripcion(respuesta.descripcion);
+                        setFecAsig(respuesta.FecAsig);
+                        //var len = respuesta.TDCxT.length;
+                        //console.log(len);
+                        setTDCxT(respuesta.TDCxT);
                     },
                     error: function (error) {
                         notify("top", "right", "fas fa-exclamation-triangle", "danger", null, null, error.responseText);
@@ -527,13 +484,40 @@
             $("#modalAsignacion").modal('show');
         }
 
+        function setTDCxT(setTDCxT) {
+            $("#tipoDeContenido option:selected").prop("selected", false);
+            /*$("#idUsuarioResponsable").val(IdUsuarioResponsable);*/
+            for (var i = 0; i < setTDCxT.length; i++) {
+                //arrayMeses.push(data[i].Dashboard_TicketsXFechaGen_MesName);
+                //arrayCantidad.push(data[i].Dashboard_TicketsXFechaGen_Count);
+                let valor = setTDCxT[i].id_tipoDeContenido;
+                console.log(valor);
+                /*$("#tipoDeContenido").val(valor);*/
+                $("#tipoDeContenido option[value='" + valor + "']").prop("selected", true);
+            }
+        }
+
+        function setUsuarioAsignado(IdUsuarioResponsable) {
+            $("#idUsuarioResponsable").val(IdUsuarioResponsable);
+        }
+
+        function setTema(tema) {
+            $("#tema").val(tema);
+        }
+
+        function setDescripcion(descripcion) {
+            $("#descripcion").val(descripcion);
+        }
+
+        function setFecAsig(FecAsig) {
+            /*;*/
+            $("#fechaEntrega").val(parseJsonDate(FecAsig));
+            /*console.log(parseJsonDate(FecAsig));*/
+        }
+
         function modalRechazo(idTicket) {
-
-
             $("#txtIdTicket2").val(idTicket).change();
             $("#modalRechazo").modal('show');
-            alert(idTicket);
-
         }
 
         function actualizaEstado(idTicket) {
@@ -545,9 +529,17 @@
                 function (respuesta) {
                     console.log(respuesta);
                     if (respuesta.success) {
-                        notify("top", "right", "fa fa-check", "success", null, null, respuesta.mensaje)
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Listo',
+                            text: respuesta.mensaje
+                        })
                     } else {
-                        notify("top", "right", "fas fa-exclamation-triangle", "danger", null, null, respuesta.mensaje)
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Listo',
+                            text: respuesta.mensaje
+                        })
                     }
 
                 }).fail(function (error) {
@@ -556,7 +548,6 @@
         }
 
         function rechazarSolicitud(idTicket) {
-            alert(idTicket);
             var textoRechazo = $('#textoRechazo').val().trim();
 
             $.post('@Url.Action("EnviarRespuestaDeRechazo")', { idTicket: idTicket, textoRechazo: textoRechazo },
@@ -597,6 +588,7 @@
         function setSatisfaccion(satisfaccion) {
             $("#satisfaccion").val(satisfaccion);
         }
+
         function setComentarios(comentarios) {
             $("#comentarios").val(comentarios);
         }
@@ -609,9 +601,18 @@
             var dateString = fechaJson.substr(6);
             var currentTime = new Date(parseInt(dateString));
             var month = currentTime.getMonth() + 1;
+            if (month < 10) {
+                month = ("0" + month).slice(-2);
+            }
+            /*console.log(month);*/
             var day = currentTime.getDate();
+            if (day < 10) {
+                day = ("0" + day).slice(-2);
+            }
+            /*console.log(day);*/
             var year = currentTime.getFullYear();
-            var date = day + "/" + month + "/" + year;
+            /*var date = day + "/" + month + "/" + year;*/
+            var date = year + "-" + month + "-" + day;
             return date;
         }
 
@@ -623,6 +624,14 @@
                 text: 'Solicitud aceptada correctamente'
             })
         }
+        if (strValue == "Ticket Asignado correctamente") {
+            Swal.fire({
+                icon: 'success',
+                title: 'Listo',
+                text: 'Solicitud asignada correctamente'
+            })
+        }
+
         if (strValue == "Solicitud eliminada satisfactoriamente") {
             Swal.fire({
                 icon: 'success',
