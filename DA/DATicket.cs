@@ -17,7 +17,6 @@ namespace DA
 {
     public class DATicket
     {
-        private readonly string _cadena;
         private readonly DAUsuario gestionUsuario;
         private readonly BEUsuario usuario;
 
@@ -32,7 +31,7 @@ namespace DA
         {
             List<TicketViewModel> tickets = new List<TicketViewModel>();
 
-            using (SqlConnection con = new SqlConnection(_cadena))
+            using (SqlConnection con = DAConexionBD.ObtenerConexion())
             {
                 SqlCommand cmd = new SqlCommand("usp_Listar_Tickets", con);
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -83,7 +82,7 @@ namespace DA
         {
             List<TicketViewModel> tickets = new List<TicketViewModel>();
 
-            using (SqlConnection con = new SqlConnection(_cadena))
+            using (SqlConnection con = DAConexionBD.ObtenerConexion())
             {
                 SqlCommand cmd = new SqlCommand("usp_Filtrar_Tickets", con);
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -118,7 +117,7 @@ namespace DA
         {
             List<TicketViewModel> tickets = new List<TicketViewModel>();
 
-            using (SqlConnection con = new SqlConnection(_cadena))
+            using (SqlConnection con = DAConexionBD.ObtenerConexion())
             {
                 SqlCommand cmd = new SqlCommand("usp_Filtrar_Mis_Tickets", con);
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -161,7 +160,7 @@ namespace DA
         {
             List<TicketViewModel> tickets = new List<TicketViewModel>();
 
-            using (SqlConnection con = new SqlConnection(_cadena))
+            using (SqlConnection con = DAConexionBD.ObtenerConexion())
             {
                 SqlCommand cmd = new SqlCommand("usp_Listar_Tickets_Responsable", con);
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -204,7 +203,7 @@ namespace DA
             string mensaje = "";
             var usuarioResponsable = gestionUsuario.BuscarUsuario(idUsuarioResponsable);
 
-            using (SqlConnection con = new SqlConnection(_cadena))
+            using (SqlConnection con = DAConexionBD.ObtenerConexion())
             {
                 try
                 {
@@ -248,7 +247,7 @@ namespace DA
         {
             DetalleTicketViewModel detalleTicket = new DetalleTicketViewModel();
 
-            using (SqlConnection con = new SqlConnection(_cadena))
+            using (SqlConnection con = DAConexionBD.ObtenerConexion())
             {
                 SqlCommand cmd = new SqlCommand("usp_Detallar_Ticket", con);
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -334,7 +333,7 @@ namespace DA
         {
             string mensaje = "";
             DetalleTicketViewModel detalleTicket = DetallarTicket(idTicket);
-            SqlConnection con = new SqlConnection(_cadena);
+            SqlConnection con = DAConexionBD.ObtenerConexion();
             con.Open();
             SqlTransaction tr = con.BeginTransaction();
 
@@ -380,7 +379,7 @@ namespace DA
         {
             BETicket ticket = null;
 
-            using (SqlConnection con = new SqlConnection(_cadena))
+            using (SqlConnection con = DAConexionBD.ObtenerConexion())
             {
                 SqlCommand cmd = new SqlCommand("usp_Datos_Asignacion_Ticket", con);
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -409,7 +408,7 @@ namespace DA
         {
             string mensaje = "";
 
-            using (SqlConnection con = new SqlConnection(_cadena))
+            using (SqlConnection con = DAConexionBD.ObtenerConexion())
             {
                 try
                 {
@@ -490,7 +489,7 @@ namespace DA
         {
             DetalleTicketViewModel detalleTicket = new DetalleTicketViewModel();
 
-            using (SqlConnection con = new SqlConnection(_cadena))
+            using (SqlConnection con = DAConexionBD.ObtenerConexion())
             {
                 con.Open();
                 SqlCommand cmd = new SqlCommand("usp_Buscar_Ticket_GUID", con);

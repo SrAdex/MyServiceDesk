@@ -6,3 +6,11 @@ D:\Proyectos\Sol_MyServiceDesk2\BE\obj\Debug\BE.csproj.CoreCompileInputs.cache
 D:\Proyectos\Sol_MyServiceDesk2\BE\obj\Debug\BE.csproj.CopyComplete
 D:\Proyectos\Sol_MyServiceDesk2\BE\obj\Debug\BE.dll
 D:\Proyectos\Sol_MyServiceDesk2\BE\obj\Debug\BE.pdb
+C:\ADEX\MyServiceDesk\MyServiceDesk\BE\bin\Debug\BE.dll
+C:\ADEX\MyServiceDesk\MyServiceDesk\BE\bin\Debug\BE.pdb
+C:\ADEX\MyServiceDesk\MyServiceDesk\BE\bin\Debug\HtmlAgilityPack.NetCore.dll
+C:\ADEX\MyServiceDesk\MyServiceDesk\BE\obj\Debug\BE.csproj.AssemblyReference.cache
+C:\ADEX\MyServiceDesk\MyServiceDesk\BE\obj\Debug\BE.csproj.CoreCompileInputs.cache
+C:\ADEX\MyServiceDesk\MyServiceDesk\BE\obj\Debug\BE.csproj.CopyComplete
+C:\ADEX\MyServiceDesk\MyServiceDesk\BE\obj\Debug\BE.dll
+C:\ADEX\MyServiceDesk\MyServiceDesk\BE\obj\Debug\BE.pdb

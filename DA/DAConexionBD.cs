@@ -11,7 +11,7 @@ namespace DA
     {
         public static SqlConnection ObtenerConexion()
         {
-            SqlConnection conn = new SqlConnection("server=10.31.1.220; Initial Catalog=SDMARKETING_ADEX; uid=sa; pwd=exporta1; encrypt=False");
+            SqlConnection conn = new SqlConnection("server=10.31.1.220; Initial Catalog=SDMARKETING_ADEX_PRUEBAS; uid=sa; pwd=exporta1; encrypt=False");
             return conn;
         }
     }
