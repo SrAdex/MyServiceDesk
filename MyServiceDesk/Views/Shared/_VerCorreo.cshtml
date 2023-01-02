@@ -1,0 +1,15 @@
+﻿@model HtmlAgilityPack.HtmlDocument
+@{
+    Layout = null;
+}
+
+@if (Model.DocumentNode.SelectSingleNode("//body") != null)
+{
+    @Html.Raw(Model.DocumentNode.SelectSingleNode("//body").OuterHtml)
+}
+else
+{
+    @Html.Raw(Model.DocumentNode.OuterHtml)
+}
+
+

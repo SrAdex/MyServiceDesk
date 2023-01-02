@@ -1,0 +1,469 @@
+﻿@model IEnumerable<BE.BECorreo>
+@using BE.ViewModels;
+@using BE;
+@{
+    BE.ViewModels.DetalleTicketViewModel ticket = ViewBag.detalleTicket as BE.ViewModels.DetalleTicketViewModel;
+    List<BE.BEEstado> estados = ViewBag.estados as List<BE.BEEstado>;
+    ViewBag.Title = "Abrir Correos";
+    List<BE.TDCxTicket> tipoDeContenidos = ViewBag.listarTipoDeContenido as List<BE.TDCxTicket>;
+    string fechaCierre = Convert.ToDateTime(ticket.fechaEntrega).ToString("yyyy-MM-dd");
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow mb-4">
+
+                <div class="card-header d-flex justify-content-between">
+                    <h5> <i class="fas fa-ticket-alt fa-lg"></i> @ticket.AsuntoTicket</h5>
+                    <h5>Asingado por: @ticket.asignadoPor</h5>
+
+
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table w-100">
+                            <form action="@Url.Action("EditarTicket", "Correo")" method="post">
+                                <input type="hidden" name="IdTicket" value="@ticket.IdTicket" />
+                            <tr>
+                                <td class="td-detalle">Fecha Generación:</td>
+                                <td class="td-detalle">
+                                    <span class="detalle">@ticket.GetFechaFormateada(ticket.FechaGeneracion)</span>
+                                </td>
+                                <td class="td-detalle">Fecha Asignación: </td>
+                                <td class="td-detalle"><span class="detalle">@ticket.GetFechaFormateada(ticket.FechaAsignación)</span></td>
+                                <td class="td-detalle">Fecha Cierre: </td>
+                                <td class="td-detalle"><span class="detalle">@ticket.GetFechaFormateada(ticket.FechaCierre)</span></td>
+                            </tr>
+                            <tr>
+                                <td class="td-detalle">Fecha Entrega:</td>
+                                <td class="td-detalle">
+                                    @if (ticket.fechaEntrega == null)
+                                    {
+                                        <span class="detalle">-</span>
+                                    }
+                                    else
+                                    {
+                                        <input required placeholder="Select date" type="date" id="fechaEntrega" onchange="actualizaFecha(@ticket.IdTicket)" class="form-control" name="fechaEntrega" value="@fechaCierre">
+                                        @*<span class="detalle">@Convert.ToDateTime(ticket.fechaEntrega).ToString("dd/MM/yyyy")</span>*@
+                                    }
+
+                                </td>
+                                <td class="td-detalle">Prioridad: </td>
+                                <td class="td-detalle"><span class="detalle">@ticket.prioridad</span></td>
+                                <td class="td-detalle">Responsable: </td>
+                                <td class="td-detalle"><span class="detalle">@ticket.UsuarioResponsable</span></td>
+                            </tr>
+                            <tr>
+                                <td class="td-detalle">Tema: </td>
+                                <td class="td-detalle"><span class="detalle">@ticket.tema</span></td>
+                                <td class="td-detalle">Descripción: </td>
+                                <td class="td-detalle"><span class="detalle">@ticket.descripcion</span></td>
+                                <td class="td-detalle">Tipo de Contenido: </td>
+                                
+                                @*<td class="td-detalle">
+                                    <ul>
+                                        @foreach (var tipoContenido in tipoDeContenidos)
+                                        {
+                                            if (tipoContenido.id_ticket == ticket.IdTicket)
+                                            {
+                                                <li>
+                                                    @tipoContenido.tipocontenidoDesc
+                                                </li>
+                                            }
+                                        }
+                                    </ul>
+                                </td>*@
+
+                            </tr>
+                            <tr>
+                                <td class="td-sistema">Etapa:</td>
+                                <td class="td-detalle">
+                                    <select name="IdEstado" id="@("cboEstado_" + ticket.IdTicket)" class="custom-select" onchange="actualizaEstado(@ticket.IdTicket)">
+                                        @foreach (var estado in estados)
+                                        {
+                                            <option value="@estado.IdEstado" @(ticket.EstadoTicket == estado.Nombre ? "selected" : "")>
+                                                @estado.Nombre
+                                            </option>
+                                        }
+                                    </select>
+                                </td>
+                                <td>Propietario: </td>
+                                <td>
+                                    <input type="text" class="form-control" name="Propietario" value="@ticket.PropietarioTicket" />
+                                </td>
+                                <td><input type="submit" name="" value="Editar" class="btn btn-primary btn-sm" /></td>
+                                <td></td>
+                            </tr>
+                            </form>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @foreach (var correo in Model)
+    {
+        <div class="row">
+            <div class="col-sm-12 col-md-4 col-xl-3">
+                <div class="card shadow mb-4">
+                    <div class="card-header">
+                        <h5>Datos del correo</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="accordion" role="tablist" aria-multiselectable="true">
+                            <div class="accordion-panel">
+                                <div class="accordion-heading text-dark" role="tab"
+                                     id="headingOne">
+                                    <h6 class="mb-0">
+                                        <a class="accordion-msg waves-effect waves-dark d-flex justify-content-between"
+                                           data-toggle="collapse"
+                                           data-parent="#accordion" href="#collapseOne"
+                                           aria-expanded="false"
+                                           aria-controls="collapseOne">
+                                            Por estado <i class="fas fa-caret-down"></i>
+                                        </a>
+                                    </h6>
+                                </div>
+
+                                <div id="collapseOne" class="panel-collapse collapse"
+                                     role="tabpanel" aria-labelledby="headingOne">
+                                    <div class="card-body widget-content">
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item texto-ellipsis" title="@correo.AsuntoCorreo">Asunto: @correo.AsuntoCorreo</li>
+                                            <li class="list-group-item texto-ellipsis" title="@correo.Remitente">De: @correo.Remitente</li>
+                                            <li class="list-group-item texto-ellipsis" title="@correo.FechaEnvio">Fecha: @correo.FechaEnvio</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="accordion-panel">
+                                <div class="accordion-heading" role="tab"
+                                     id="headingTwo">
+                                    <h6 class="mb-0">
+                                        <a class="accordion-msg waves-effect waves-dark d-flex justify-content-between"
+                                           data-toggle="collapse"
+                                           @*data-parent="#accordion" href="#@(correo.IdCorreo)_adjuntos"*@
+                                           data-parent="#accordion" href="#collapseTwo"
+                                           aria-expanded="false"
+                                           aria-controls="collapseTwo">
+                                            Ver Adjuntos <i class="fas fa-caret-down"></i>
+                                        </a>
+                                    </h6>
+                                </div>
+                                <div id="collapseTwo" class="panel-collapse collapse"
+                                     role="tabpanel" aria-labelledby="headingTwo">
+                                    <div class="card-body widget-content">
+                                        <ul class="list-group list-group-flush">
+                                            @if (correo.Adjuntos.Count > 0)
+                                            {
+                                                foreach (var adjunto in correo.Adjuntos)
+                                                {
+                                                    <li class="list-group-item texto-ellipsis" title="@adjunto.NombreAdjunto">
+                                                        <a target="_blank" href="@Url.Content(adjunto.RutaAdjunto)">@adjunto.NombreAdjunto </a>
+                                                    </li>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <li class="list-group-item">Sin Adjuntos</li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            @*<div class="card m-b-0 border-top">
+                                    <div class="card-body text-dark" role="tab"
+                                         id="headingOne">
+                                        <h6 class="mb-0">
+                                            <a class="accordion-msg waves-effect waves-dark d-flex justify-content-between"
+                                               data-toggle="collapse"
+                                               data-parent="#accordion" href="#collapseOne"
+                                               aria-expanded="true"
+                                               aria-controls="collapseOne">
+                                                Por estado <i class="fas fa-caret-down"></i>
+                                            </a>
+                                        </h6>
+                                    </div>
+                                    <div id="collapseOne" class="panel-collapse collapse show"
+                                         role="tabpanel" aria-labelledby="headingOne">
+                                        <div class="card-body widget-content" style="text-align:left">
+
+                                            @foreach (var estado in estados)
+                                            {
+                                                <div class="form-check">
+
+                                                    <label class="form-check-label mt-1" for="@estado.Nombre" title="@estado.Nombre">
+                                                        @estado.Nombre
+                                                    </label>
+                                                </div>
+                                                <hr class="sidebar-divider d-none d-md-block">
+                                            }
+                                        </div>
+                                    </div>
+                                </div>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-8 col-xl-9">
+                <div class="card shadow mb-4">
+                    <div class="card-header ">
+                        <div class="titulo-correo">
+                            <h5 class="texto-ellipsis">@correo.AsuntoCorreo</h5>
+                        </div>
+
+                        <div class="card-header-right" style="text-align: right;">
+
+                            <i class="fa fa-reply" onclick="setDatosRespuesta('@correo.CodigoCorreo', '@correo.IdTicket', 'reply')"></i>
+                            <i class="fas fa-reply-all" onclick="setDatosRespuesta('@correo.CodigoCorreo', '@correo.IdTicket','replyAll')"></i>
+                            <i class="fa fa-minus minimize-card"></i>
+
+                        </div>
+                        <p class="flex-wrap">Para : @correo.DestinatariosTexto</p>
+                        <p class="flex-wrap">CC : @correo.CopiasTexto</p>
+                    </div>
+                    <div class="card-body">
+                        @Html.Partial("_VerCorreo", correo.Render)
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="row">
+
+        <div class="col-12">
+            <div class="card shadow mb-4" id="Respuesta" style="display: none;">
+                <div class="card-body">
+                    @using (Html.BeginForm("Responder", "Correo", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        <input type="hidden" value="" id="txtCodigoCorreo" name="CodigoCorreo" />
+                        <input type="hidden" value="" id="txtIdTicket" name="IdTicket" />
+                        <input type="hidden" value="" id="txtAsunto" name="AsuntoCorreo" />
+                        <input type="hidden" value="" id="txtHeaderReferences" name="HeaderReferences" />
+
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label class="col-form-label">Para</label>
+                                <input type="text" class="form-control" name="Para" id="txtPara" required />
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="col-form-label">Cc:</label>
+                                <input type="text" class="form-control" name="Copias" id="txtCc" />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-md-12">
+                                <label for="adjuntos">Adjuntos</label>
+                                <div class="file-loading">
+                                    <input id="file-es" name="adjuntos" type="file" multiple data-browse-on-zone-click="true">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-md-5">
+                                <label class="col-form-label">Estado: </label>
+                                <select name="IdEstado" id="@("cboEstado_" + ticket.IdTicket)" class="custom-select">
+                                    @foreach (var estado in estados)
+                                    {
+                                        <option value="@estado.IdEstado" @(ticket.EstadoTicket == estado.Nombre ? "selected" : "")>
+                                            @estado.Nombre
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group col-md-5">
+                                <label class="col-form-label">Propietario (recibirá la encuesta): </label>
+                                <input type="text" class="form-control" name="Propietario" value="@ticket.PropietarioTicket" />
+                            </div>
+
+                            <div class="form-group col-md-2">
+                                <label class="col-form-label">&nbsp;</label> <br />
+                                <input type="submit" class="btn btn-primary btn-sm w-100" value="Responder" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-form-label">Mensaje</label>
+                            <textarea class="form-control" name="MensajeCorreo" id="txtMensaje" rows="8" cols="50">
+                            <br /><br />
+                            Atentamente, <br />
+                            Mesa de Servicio ADEX
+                        </textarea>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+@section scripts {
+    <script>
+        @*tinymce.init({
+            selector: 'textarea#txtMensaje',
+            height: "400",
+            content_css: "@Url.Content("~/Content/css/style.css")",
+        });*@
+        tinymce.init({
+            selector: 'textarea#txtMensaje'
+        });
+
+        var strValue = "@((string)TempData["alerta"])";
+        var strMensaje = "@((string)TempData["mensaje"])";
+        if (strValue == "alert alert-success") {
+            Swal.fire({
+                icon: 'success',
+                title: 'Listo',
+                text: strMensaje
+            })
+        }
+        if (strValue == "alert alert-danger"){
+            Swal.fire({
+                type: 'error',
+                title: 'Error',
+                text: strMensaje,
+            });
+        }
+
+
+        function setDatosRespuesta(codigoCorreo, idTicket, tipoRespuesta) {
+
+            $("#txtPara").val("");
+            $("#txtCc").val("");
+
+            $.ajax({
+
+                url: '@Url.Action("GetDatosRespuesta", "Correo")' + '?codigoCorreo=' + codigoCorreo + '&idTicket=' + idTicket,
+                type: 'POST',
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data);
+
+                    $("#txtCodigoCorreo").val(data.CodigoCorreo);
+                    $("#txtIdTicket").val(data.IdTicket);
+                    $("#txtAsunto").val(data.AsuntoCorreo);
+                    $("#txtPara").val(data.CorreoRemitente);
+                    $("#txtHeaderReferences").val(data.HeaderReferences);
+
+                    if (tipoRespuesta == "replyAll") {
+                        if (data.DestinatariosTexto != "") {
+                            $('#txtPara').val($('#txtPara').val() + ',' + data.DestinatariosTexto);
+                        }
+                        $('#txtCc').val($('#txtCc').val() + data.CopiasTexto);
+                    }
+
+                    $("#Respuesta").show("fast");
+
+                    window.location.hash = "Respuesta";
+
+                    /*$('#txtCc').val($('#txtCc').val() + ',servicedesk.ti@adexperu.org.pe');*/
+                },
+                error: function (request, error) {
+                    alert("Error al obtener los datos de respuesta.");
+                }
+            });
+        }
+
+        function actualizaEstado(idTicket) {
+            /*alert(idTicket);*/
+            var select = document.getElementById("cboEstado_" + idTicket);
+            var idEstado = select.options[select.selectedIndex].value;
+
+            $.post('@Url.Action("ActualizarEstadoTicket", "Ticket")', { idTicket: idTicket, idEstado: idEstado },
+                function (respuesta) {
+                    console.log(respuesta);
+                    if (respuesta.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Listo',
+                            text: respuesta.mensaje
+                        })
+                    } else {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Listo',
+                            text: respuesta.mensaje
+                        })
+                    }
+
+                }).fail(function (error) {
+                    console.log(error);
+            });
+        }
+
+        function actualizaFecha(idTicket) {
+            /*alert(idTicket);*/
+            @*var select = document.getElementById("cboEstado_" + idTicket);
+            var idEstado = select.options[select.selectedIndex].value;
+
+            $.post('@Url.Action("ActualizarEstadoTicket", "Ticket")', { idTicket: idTicket, idEstado: idEstado },
+                function (respuesta) {
+                    console.log(respuesta);
+                    if (respuesta.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Listo',
+                            text: respuesta.mensaje
+                        })
+                    } else {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Listo',
+                            text: respuesta.mensaje
+                        })
+                    }
+
+                }).fail(function (error) {
+                    console.log(error);
+            });*@
+            var fechaEntrega = $("#fechaEntrega").val();
+
+            console.log(fechaEntrega)
+
+            $.post('@Url.Action("ActualizarFechaTicket", "Ticket")', { idTicket: idTicket, fechaEntrega: fechaEntrega },
+                function (respuesta) {
+                    console.log(respuesta);
+                    if (respuesta.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Listo',
+                            text: respuesta.mensaje
+                        })
+                    } else {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Listo',
+                            text: respuesta.mensaje
+                        })
+                    }
+
+                }).fail(function (error) {
+                    console.log(error);
+            });
+        }
+    </script>
+
+    <script>
+        $("#file-es").fileinput({
+            theme: 'fas',
+            language: 'es',
+            allowedFileExtensions: ['jpg', 'png', 'gif', 'pdf', 'csv', 'xlsx', 'docx', 'txt', 'sql'],
+            showUpload: false,
+            enableResumableUpload: true,
+            inputGroupClass: "input-group-sm",
+            dropZoneEnabled: false,
+            inputGroupClass: "input-group-sm"
+        });
+    </script>
+
+}

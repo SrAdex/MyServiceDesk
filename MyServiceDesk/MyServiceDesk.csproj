@@ -57,7 +57,12 @@
     <Reference Include="ExcelNumberFormat, Version=1.0.10.0, Culture=neutral, PublicKeyToken=23c6f5d73be07eca, processorArchitecture=MSIL">
       <HintPath>..\packages\ExcelNumberFormat.1.0.10\lib\net20\ExcelNumberFormat.dll</HintPath>
     </Reference>
-    <Reference Include="HtmlAgilityPack.NetCore, Version=1.5.0.1, Culture=neutral, PublicKeyToken=null" />
+    <Reference Include="HtmlAgilityPack, Version=1.11.46.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.11.46\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    </Reference>
+    <Reference Include="HtmlAgilityPack.NetCore, Version=1.5.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.NetCore.1.5.0.1\lib\net45\HtmlAgilityPack.NetCore.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="MoreLinq, Version=2.10.21623.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
       <HintPath>..\packages\morelinq.2.10.0\lib\net40\MoreLinq.dll</HintPath>
@@ -1126,6 +1131,7 @@
     <Content Include="assets\libs\jquery-steps\build\jQuery.Steps.1.1.0.nupkg" />
     <Content Include="assets\libs\jquery-steps\nuget\jQuery.Steps.nuspec" />
     <Content Include="assets\libs\jquery-steps\steps.jquery.json" />
+    <Content Include="libman.json" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -1157,13 +1163,14 @@
     <Content Include="Views\Categoria\Listado.cshtml" />
     <Content Include="Views\Shared\_LayoutEncuestas.cshtml" />
     <Content Include="Views\Dashboard\Dashboard.cshtml" />
+    <Content Include="Views\Usuario\Listado.cshtml" />
+    <Content Include="Views\Shared\_VerCorreo.cshtml" />
+    <Content Include="Views\Correo\AbrirCorreos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
-    <Folder Include="Views\Correo\" />
     <Folder Include="Views\Encuestas\" />
-    <Folder Include="Views\Usuario\" />
     <Folder Include="Views\Util\" />
   </ItemGroup>
   <ItemGroup>
