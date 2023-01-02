@@ -216,3 +216,6 @@ C:\ADEX\MyServiceDesk\MyServiceDesk\MyServiceDesk\obj\Debug\MyServiceDesk.csproj
 C:\ADEX\MyServiceDesk\MyServiceDesk\MyServiceDesk\obj\Debug\MyServiceDesk.csproj.CopyComplete
 C:\ADEX\MyServiceDesk\MyServiceDesk\MyServiceDesk\obj\Debug\MyServiceDesk.dll
 C:\ADEX\MyServiceDesk\MyServiceDesk\MyServiceDesk\obj\Debug\MyServiceDesk.pdb
+D:\Proyectos\Sol_MyServiceDesk2\MyServiceDesk\bin\HtmlAgilityPack.dll
+D:\Proyectos\Sol_MyServiceDesk2\MyServiceDesk\bin\HtmlAgilityPack.pdb
+D:\Proyectos\Sol_MyServiceDesk2\MyServiceDesk\bin\HtmlAgilityPack.xml
