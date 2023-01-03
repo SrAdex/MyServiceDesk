@@ -57,7 +57,9 @@
     <Reference Include="ExcelNumberFormat, Version=1.0.10.0, Culture=neutral, PublicKeyToken=23c6f5d73be07eca, processorArchitecture=MSIL">
       <HintPath>..\packages\ExcelNumberFormat.1.0.10\lib\net20\ExcelNumberFormat.dll</HintPath>
     </Reference>
-    <Reference Include="HtmlAgilityPack.NetCore, Version=1.5.0.1, Culture=neutral, PublicKeyToken=null" />
+    <Reference Include="HtmlAgilityPack, Version=1.11.46.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.11.46\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="MoreLinq, Version=2.10.21623.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
       <HintPath>..\packages\morelinq.2.10.0\lib\net40\MoreLinq.dll</HintPath>
@@ -154,6 +156,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CategoriaController.cs" />
     <Compile Include="Controllers\CorreoController.cs" />
+    <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\EncuestasController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\TicketController.cs" />
@@ -872,6 +875,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\loader.css" />
     <Content Include="Content\LoginStyles.css" />
+    <Content Include="css\mySite.css" />
     <Content Include="css\sb-admin-2.css" />
     <Content Include="css\sb-admin-2.min.css" />
     <Content Include="dist\css\icons\font-awesome\css\fa-brands.css" />
@@ -1124,6 +1128,7 @@
     <Content Include="assets\libs\jquery-steps\build\jQuery.Steps.1.1.0.nupkg" />
     <Content Include="assets\libs\jquery-steps\nuget\jQuery.Steps.nuspec" />
     <Content Include="assets\libs\jquery-steps\steps.jquery.json" />
+    <Content Include="libman.json" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -1152,14 +1157,17 @@
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Ticket\Listado.cshtml" />
     <Content Include="Views\Ticket\MisTickets.cshtml" />
+    <Content Include="Views\Categoria\Listado.cshtml" />
+    <Content Include="Views\Shared\_LayoutEncuestas.cshtml" />
+    <Content Include="Views\Dashboard\Dashboard.cshtml" />
+    <Content Include="Views\Usuario\Listado.cshtml" />
+    <Content Include="Views\Shared\_VerCorreo.cshtml" />
+    <Content Include="Views\Correo\AbrirCorreos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
-    <Folder Include="Views\Categoria\" />
-    <Folder Include="Views\Correo\" />
     <Folder Include="Views\Encuestas\" />
-    <Folder Include="Views\Usuario\" />
     <Folder Include="Views\Util\" />
   </ItemGroup>
   <ItemGroup>

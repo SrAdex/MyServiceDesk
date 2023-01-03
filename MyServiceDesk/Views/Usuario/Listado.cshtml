@@ -1,0 +1,433 @@
+﻿@model IEnumerable<BE.ViewModels.UsuarioViewModel>
+@using BE
+@{
+    ViewBag.Title = "Listado";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row">
+
+    <div class="col-md-12">
+        <!-- Basic table card start -->
+        <div class="card shadow mb-5">
+            <div class="card-header d-flex justify-content-between">
+                <h5>Listado de Usuarios</h5>
+                @*@Html.ActionLink("Nuevo Usuario", "Registrar", "Usuario", null, new { @class = "btn btn-sm btn-primary" })*@
+                <button class="btn btn-sm btn-primary" href="#" onclick="modalRegistro()">Nuevo Usuario</button>
+            </div>
+            <div class="card-body">
+                @*@if (TempData["mensaje"] != null)
+                    {
+                        <div class="alert @TempData["tipoAlerta"]" role="alert">
+                            @TempData["mensaje"]
+                        </div>
+                    }*@
+                <div class="table-responsive">
+                    <table class="table table-xs table-hover" id="dataTableUsuario">
+                        <thead class="table-dark">
+                            <tr>
+                                <th class="text-center">ID</th>
+                                <th class="text-center">Nombre Completo</th>
+                                <th class="text-center">Correo</th>
+                                <th class="text-center">Estado</th>
+                                <th class="text-center">Operaciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var usuario in Model)
+                            {
+                                <tr>
+                                    <td class="td-sistema">
+                                        @usuario.IdUsuario
+                                    </td>
+                                    <td class="td-ellipsis td-sistema">
+                                        @usuario.NombreCompleto
+                                    </td>
+                                    <td class="td-sistema">
+                                        @usuario.CorreoUsuario
+                                    </td>
+                                    <td class="td-sistema">
+                                        @(usuario.EsActivo ? "Activo" : "Eliminado")
+                                    </td>
+                                    <td class="text-center td-sistema">
+                                        @*<a href="@Url.Action("Editar", "Usuario", new { id = usuario.IdUsuario})">
+                                                <i class="fa fa-edit"></i>
+                                            </a>*@
+                                        <a href="#" onclick="modalEdit(@usuario.IdUsuario)">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+
+                                        <a href="#" onclick="ConfirmarDelete(@usuario.IdUsuario)">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modalRegistro" class="modal fade" tabindex="-1">
+
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            @using (Html.BeginForm("Registrar", "Usuario", FormMethod.Post))
+            {
+                <div class="modal-header">
+                    <h3>Edición de Usuario</h3>
+                    <button class="close" data-dismiss="modal" aria-label="Cerrar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-form-label">Nombre(s)</label>
+                                <input type="text" name="NombresUsuario" class="form-control"
+                                       placeholder="Nombre(s) del usuario" required id="NombresUsuario2">
+                                <span class="form-bar"></span>
+                                @*@Html.Hidden("IdUsuario", "", new { id = "txtIdTicket2" })*@
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-form-label">Apellidos</label>
+                                <input type="text" name="ApellidosUsuario" class="form-control"
+                                       placeholder="Apellidos del usuario" required id="ApellidosUsuario2">
+                                <span class="form-bar"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="col-form-label">Correo ADEX</label>
+                            <input type="email" name="CorreoUsuario" class="form-control"
+                                   placeholder="Correo ADEX del usuario" required id="CorreoUsuario2">
+                            <span class="form-bar"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-form-label">Iniciales</label>
+                                <input type="text" name="InicialesUsuario" class="form-control"
+                                       placeholder="Ingrese la primera letra del nombre y la primera del apellido" required id="InicialesUsuario2">
+                                <span class="form-bar"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group col-md-12 col-lg-6">
+                                <label class="col-form-label">Roles</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="2" name="roles" id="Administrador2" />
+                                    <label class="form-check-label mt-1" for="Administrador">
+                                        Administrador
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" required type="checkbox" value="1" name="roles" id="Responsable2" />
+                                    <label class="form-check-label mt-1" for="Responsable">
+                                        Responsable
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-form-label">Estado</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="true" name="EsActivo" id="EsActivo" />
+                                <label class="form-check-label mt-1" for="Activo">
+                                    Activo
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-danger mr-3" data-dismiss="modal">Cerrar</button>
+                    <input type="submit" value="Actualizar Usuario" class="btn-sm btn btn-primary" />
+                </div>
+            }
+
+        </div>
+    </div>
+
+</div>
+<div id="modalEdit" class="modal fade" tabindex="-1">
+
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            @using (Html.BeginForm("Editar", "Usuario", FormMethod.Post))
+            {
+                <div class="modal-header">
+                    <h3>Edición de Usuario</h3>
+                    <button class="close" data-dismiss="modal" aria-label="Cerrar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-form-label">Nombre(s)</label>
+                                <input type="text" name="NombresUsuario" class="form-control"
+                                       placeholder="Nombre(s) del usuario" required id="NombresUsuario">
+                                <span class="form-bar"></span>
+                                @Html.Hidden("IdUsuario", "", new { id = "txtIdTicket" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-form-label">Apellidos</label>
+                                <input type="text" name="ApellidosUsuario" class="form-control"
+                                       placeholder="Apellidos del usuario" required id="ApellidosUsuario">
+                                <span class="form-bar"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="col-form-label">Correo ADEX</label>
+                            <input type="email" name="CorreoUsuario" class="form-control"
+                                   placeholder="Correo ADEX del usuario" required id="CorreoUsuario">
+                            <span class="form-bar"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-form-label">Iniciales</label>
+                                <input type="text" name="InicialesUsuario" class="form-control"
+                                       placeholder="Ingrese la primera letra del nombre y la primera del apellido" required id="InicialesUsuario">
+                                <span class="form-bar"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group col-md-12 col-lg-6">
+                                <label class="col-form-label">Roles</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="2" name="roles" id="Administrador" />
+                                    <label class="form-check-label mt-1" for="Administrador">
+                                        Administrador
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" required type="checkbox" value="1" name="roles" id="Responsable" />
+                                    <label class="form-check-label mt-1" for="Responsable">
+                                        Responsable
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-form-label">Estado</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="true" name="EsActivo" id="EsActivo" />
+                                <label class="form-check-label mt-1" for="Activo">
+                                    Activo
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-danger mr-3" data-dismiss="modal">Cerrar</button>
+                    <input type="submit" value="Actualizar Usuario" class="btn-sm btn btn-primary" />
+                </div>
+            }
+
+        </div>
+    </div>
+
+</div>
+@section Scripts{
+    <script>
+
+        let dataTable
+        let dataTableIsInitialized = false
+
+        //Parámetros de Datatable
+        const dataTableOptions = {
+            columnDefs: [
+                { className: "centered", targets: [0, 1, 2, 3, 4] },
+                { orderable: false, targets: [4] },
+                { searchable: false, targets: [4] },
+                { width: "15%", targets: [] }
+            ],
+            destroy: true,
+            language: {
+                "processing": "Procesando...",
+                "lengthMenu": "Mostrar _MENU_ registros",
+                "zeroRecords": "No se encontraron resultados",
+                "emptyTable": "Ningún dato disponible en esta tabla",
+                "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                "search": "Buscar:",
+                "infoThousands": ",",
+                "loadingRecords": "Cargando...",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Último",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                },
+                "aria": {
+                    "sortAscending": ": Activar para ordenar la columna de manera ascendente",
+                    "sortDescending": ": Activar para ordenar la columna de manera descendente"
+                }
+            }
+        }
+
+        window.addEventListener("load", async () => { await initDataTable(); })
+
+        const initDataTable = () => {
+
+            if (dataTableIsInitialized) {
+                dataTable.destroy()
+            }
+
+            dataTable = $('#dataTableUsuario').removeAttr('width').DataTable(dataTableOptions)
+
+            dataTableIsInitialized = true
+        }
+
+    
+         function modalEdit(id) {
+            $.ajax({
+                url: '@Url.Action("ListarDatosUsuario", "Usuario")' + '?id=' + id,
+                    success: function (respuesta) {
+                        setNombresUsuario(respuesta.NombresUsuario);
+                        setApellidosUsuario(respuesta.ApellidosUsuario);
+                        setCorreoUsuario(respuesta.CorreoUsuario);
+                        setEsActivo(respuesta.EsActivo);
+                        setInicialesUsuario(respuesta.InicialesUsuario);
+                        setRolesUsuario(respuesta.RolesUsuario);
+                    },
+                    error: function (error) {
+                        notify("top", "right", "fas fa-exclamation-triangle", "danger", null, null, error.responseText);
+                    }
+                });
+            $("#txtIdTicket").val(id).change();
+            $("#modalEdit").modal('show');
+        }
+
+        function setNombresUsuario(asunto) {
+            $("#NombresUsuario").val(asunto);
+        }
+        function setApellidosUsuario(asunto) {
+            $("#ApellidosUsuario").val(asunto);
+        }
+        function setCorreoUsuario(asunto) {
+            $("#CorreoUsuario").val(asunto);
+        }
+        function setEsActivo(asunto) {
+            $("input[name='EsActivo']").prop("checked", false);
+            if (asunto == true) {
+                $("input[name='EsActivo']").prop("checked", true);
+            }
+            //$("#EsActivo").val(asunto);
+        }
+        function setInicialesUsuario(asunto) {
+            $("#InicialesUsuario").val(asunto);
+        }
+        function setRolesUsuario(asunto) {
+            $("input[id='Administrador']").prop("checked", false);
+            $("input[id='Responsable']").prop("checked", false);
+            if (asunto == "[object Object]") {
+                $("input[id='Responsable']").prop("checked", true);
+            } else {
+                $("input[id='Administrador']").prop("checked", true);
+                $("input[id='Responsable']").prop("checked", true);
+            }
+        }
+
+        function modalRegistro() {
+            $("#modalRegistro").modal('show');
+        }
+
+        function ConfirmarDelete(idColaborador) {
+
+            Swal.fire({
+                title: '¿Seguro que desea eliminar?',
+                text: "Puede editar el estado del usuario posteriormente",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'Cancelar',
+                confirmButtonText: 'Sí, elimínalo'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.post('@Url.Action("Eliminar", "Usuario")', { id: idColaborador },
+                        function (respuesta) {
+                            if (respuesta.success) {
+                                Swal.fire({
+                                    position: 'center',
+                                    icon: 'success',
+                                    title: 'Se actualizó el estado del usuario a "eliminado"',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                })
+                                setTimeout(function () { location.reload(); }, 1500);
+                            } else {
+                                Swal.fire(
+                                    '¡Error!',
+                                    respuesta.mensaje,
+                                    'error'
+                                )
+                            }
+                        console.log(respuesta);
+
+                    }).fail(function (error) {
+                        console.log(error);
+                    });
+                }
+            })
+        }
+
+        var strValue = "@((string)TempData["tipoAlerta"])";
+        if (strValue == "alert-success") {
+            Swal.fire({
+                icon: 'success',
+                title: 'Listo',
+                text: 'Usuario editado correctamente.'
+            })
+        }
+
+        if (strValue == "alert alert-success") {
+            Swal.fire({
+                icon: 'success',
+                title: 'Listo',
+                text: 'Usuario registrado correctamente.'
+            })
+        }
+
+        if (strValue == "alert-danger") {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Ocurrió un problema al actualizar usuario.'
+            })
+        }
+
+        if (strValue == "alert alert-danger") {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Ocurrió un problema al registrar usuario.'
+            })
+        }
+    </script>
+}
+

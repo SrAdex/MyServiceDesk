@@ -416,28 +416,16 @@
                 dataTable.destroy()
             }
 
-            dataTable = $('#dataTableTickets').DataTable(dataTableOptions)
+            dataTable = $('#dataTableTickets').removeAttr('width').DataTable(dataTableOptions)
 
             dataTableIsInitialized = true
         }
 
+        var table
 
         $(document).ready(function () {
 
             var comboCategorias = $("#cboCategoria");
-
-            /*$('#dataTableTickets').DataTable();*/
-            var table = $('#dataTableTickets').removeAttr('width').DataTable({
-                scrollX: true,
-                scrollCollapse: true,
-                columnDefs: [
-                    { width: 105, targets: 0 }, //FechaGen
-                    { width: 200, targets: 2 }, //Asunto
-                    { width: 150, targets: 3 }, //Tema
-                    { width: 150, targets: 5 }, //Etapa
-                ],
-                fixedColumns: true
-            });
 
 
             function refresh() {

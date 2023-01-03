@@ -14,8 +14,8 @@ namespace MyServiceDesk.Controllers
 
         public CategoriaController()
         {
-            gestionUtilidades= new DA.DAUtilidades();
-            gestionCategoria= new DA.DACategoria();
+            gestionUtilidades = new DA.DAUtilidades();
+            gestionCategoria = new DA.DACategoria();
         }
 
         [Autorizacion(Enums.Operacion.ListadoCategorias)]
