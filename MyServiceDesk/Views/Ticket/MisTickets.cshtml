@@ -84,7 +84,6 @@
                                 <th class="text-center">Responsable</th>
                                 <th class="text-center">Fec. Entrega.</th>
                                 <th class="text-center">Estado</th>
-                                <th class="text-center"># de dias Vencido</th>
                                 <th class="text-center">Operaciones</th>
                             </tr>
                         </thead>
@@ -137,22 +136,6 @@
                                         </select>
                                     </td>
                                    
-                                    <td class="td-sistema" style="text-align: center;">
-                                        @if (ticket.diasVencido == 0)
-                                        {
-                                            <label title="Estás a tiempo">
-                                                -
-                                            </label>
-                                        }
-                                        else
-                                        {
-                                            <label class="badge badge-danger" title="@ticket.diasVencido">
-                                                @ticket.diasVencido
-                                            </label>
-                                        }
-
-
-                                    </td>
                                     <td class="td-sistema" style="text-align: center;">
                                         <a href="@Url.Action("AbrirCorreos", "Correo", new { id = ticket.IdTicket})">
                                             <i class="fas fa-envelope fa-fw"></i>
@@ -352,18 +335,10 @@
 
         var strValue = "@((string)TempData["mensaje"])";
         if (strValue == "si") {
-            Swal.fire({
-                icon: 'success',
-                title: 'Listo',
-                text: 'Etapa actualizada correctamente.'
-            })
+            toastr.success("Etapa actualizada correctamente.")
         }
         if (strValue == "no") {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Ocurrió un error.'
-            })
+            toastr.error("Ocurrió un error.")
         }
     </script>
 }
