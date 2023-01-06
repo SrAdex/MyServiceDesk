@@ -1,0 +1,20 @@
+﻿
+@{
+    ViewBag.Title = "Gracias";
+    Layout = "~/Views/Shared/_LayoutEncuestas.cshtml";
+}
+<body style="background-color: #95CBDE;">
+    <div class="container text-center mt-5">
+        <div class="card mb-4 py-3" style="background-color: #C6E1EA;">
+            <h1>@TempData["mensaje"]</h1>
+            <h2>Muchas gracias por tu opinión.</h2>
+            <h3>¡Vamos por más!</h3>
+            <h3>ADEX RRHH</h3>
+        </div>
+
+        <div class="row d-flex justify-content-center">
+            <img class="instituto col-md-2" src="~/Img/help_desk_icon.png" />
+            <img class="gremio col-md-5" src="~/Img/logo_adex.png" />
+        </div>
+    </div>
+</body>

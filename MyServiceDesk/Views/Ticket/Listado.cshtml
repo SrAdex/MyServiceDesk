@@ -9,6 +9,7 @@
     List<TDCxTicket> tipoDeContenidosX = ViewBag.listarTipoDeContenido as List<TDCxTicket>;
     List<int> filtroEstado = ViewBag.filtroEstado;
     List<int> filtroResponsable = ViewBag.filtroResponsable;
+    List<BETipoDeContenido> tipoDeContenidos = ViewBag.tipoDeContenidos as List<BETipoDeContenido>;
 }
 
 <div class="row">
@@ -136,12 +137,12 @@
                     <table class="table table-xs table-hover border" id="dataTableTickets" cellspacing="0">
                         <thead class="table-dark">
                             <tr>
-                                <th class="text-center">Fec. Recepción</th>
+                                <th class="text-center td-sistema">Fec. Recepción</th>
                                 <th class="text-center">Fec. Entrega</th>
                                 <th class="text-center">Asunto</th>
                                 <th class="text-center">Responsable</th>
                                 <th class="text-center">Estado</th>
-                                <th class="text-center">Operaciones</th>
+                                <th class="text-center td-sistema">Operaciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -275,6 +276,7 @@
                             </div>
                         </div>-->
                     </div>
+
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
@@ -282,7 +284,19 @@
                                 <textarea class="form-control" required id="descripcion" name="descripcion" rows="5"></textarea>
                             </div>
                         </div>
-                        
+
+                        <div class="col-md-6">
+                            <label class="col-form-label">Tipo De Contenido</label>
+                            <select id="tipoDeContenido" name="tipoDeContenido" required class="custom-select custom-select" size="6" data-width="100%" data-live-search="true" multiple>
+                                @foreach (var tdc in tipoDeContenidos)
+                                {
+                                    //if (responsable.IdUsuario != 1)
+                                    //{
+                                    <option value="@tdc.id_tipocontenido">@tdc.descripcion</option>
+                                    @*}*@
+                                }
+                            </select>
+                        </div>
                     </div>
                 </div>
 
@@ -382,7 +396,7 @@
                 { className: "centered", targets: [0, 1, 2, 3, 4, 5] },
                 { orderable: false, targets: [3, 4, 5] },
                 { searchable: false, targets: [3, 4, 5] },
-                {width: "15%", targets: [4]}
+                {width: "20%", targets: [4]}
             ],
             destroy: true,
             language: {
@@ -455,7 +469,6 @@
             $.ajax({
                 url: '@Url.Action("ListarDatosAsignacion", "Ticket")' + '?idTicket=' + idTicket,
                 success: function (respuesta) {
-                    console.log(respuesta);
                         setUsuarioAsignado(respuesta.IdUsuarioResponsable);
                         setTema(respuesta.tema);
                         setDescripcion(respuesta.descripcion);
@@ -470,6 +483,7 @@
                 });
             $("#txtIdTicket").val(idTicket).change();
             $("#modalAsignacion").modal('show');
+            $('#loaderbody').addClass('hide');
         }
 
         function setTDCxT(setTDCxT) {
@@ -515,21 +529,11 @@
 
             $.post('@Url.Action("ActualizarEstadoTicket")', { idTicket: idTicket, idEstado: idEstado },
                 function (respuesta) {
-                    console.log(respuesta);
                     if (respuesta.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Listo',
-                            text: respuesta.mensaje
-                        })
+                        toastr.success(respuesta.mensaje);
                     } else {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Listo',
-                            text: respuesta.mensaje
-                        })
+                        toastr.error(respuesta.mensaje);
                     }
-
                 }).fail(function (error) {
                     console.log(error);
             });
@@ -582,7 +586,7 @@
         }
 
         $(function () {
-            $('select').selectpicker();
+            $('#select').selectpicker();
         });
 
         function parseJsonDate(fechaJson) {

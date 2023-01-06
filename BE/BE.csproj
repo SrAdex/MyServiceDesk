@@ -53,6 +53,7 @@
     <Compile Include="BEEstado.cs" />
     <Compile Include="BEModulo.cs" />
     <Compile Include="BEOperacion.cs" />
+    <Compile Include="BETipoDeContenido.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BERol.cs" />
     <Compile Include="BETicket.cs" />

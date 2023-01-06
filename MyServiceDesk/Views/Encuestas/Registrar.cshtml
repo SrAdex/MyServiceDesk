@@ -1,0 +1,128 @@
+﻿@model BE.ViewModels.DetalleTicketViewModel
+@{
+    ViewBag.title = "Registro de Encuesta";
+    Layout = "~/Views/Shared/_LayoutEncuestas.cshtml";
+}
+<body style="background-color: #95CBDE;">
+    <div class="row mt-5">
+        <div class="col-md-12 col-lg-7 col-xl-6 m-auto">
+            <div class="card shadow mb-5">
+                <div class="card-header text-center">
+                    <h3>Encuesta de Satisfacción de Ticket - Service Desk Marketing ADEX</h3>
+                </div>
+                <div class="card-body">
+                    <div class=" row d-flex justify-content-center">
+                        <img class="instituto col-md-2" src="~/Img/help_desk_icon.png" />
+                        <img class="gremio col-md-5" src="~/Img/logo_adex.png" />
+                    </div>
+
+                    <form method="post" class="needs-validation" novalidate>
+                        <input type="hidden" name="IdTicket" value="@Model.IdTicket" />
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label class="col-form-label">Se ha cerrado el ticket: </label>
+                                <input class="form-control" value="@Model.AsuntoTicket" readonly />
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label class="col-form-label">Fecha de cierre: </label>
+                                <input class="form-control" value="@Model.FechaCierre.Value.ToString("dd/MM/yyyy hh:mm")" readonly />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-md-12">
+                                <label class="col-form-label">
+                                    Por favor califique qué tan satisfecho
+                                    está con la atención brindada: <br />
+                                </label>
+                                <div class="col clasificacion">
+                                    <div class="col-md-12">
+                                        <input required id="radio1" type="radio" name="Satisfaccion" value="5">
+                                        <label for="radio1" title="Totalmente Satisfecho">Totalmente Satisfecho</label>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <input id="radio2" type="radio" name="Satisfaccion" value="4">
+                                        <label for="radio2" title="Muy Satisfecho">Muy Satisfecho</label>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <input id="radio3" type="radio" name="Satisfaccion" value="3">
+                                        <label for="radio3" title="Satisfecho">Satisfecho</label>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <input id="radio4" type="radio" name="Satisfaccion" value="2">
+                                        <label for="radio4" title="Poco Satisfecho">Poco Satisfecho</label>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <input id="radio5" type="radio" name="Satisfaccion" value="1">
+                                        <label for="radio5" title="Nada Satisfecho">Nada Satisfecho</label>
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        ¡Por favor seleccione una valoración!
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-md-12">
+                                <label class="col-form-label">Comentarios: </label>
+                                <textarea class="form-control" maxlength="250" name="Comentario" rows="4"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-auto m-auto">
+                                <input type="submit" name="name" value="Enviar Encuesta" class="btn btn-sm btn-primary" onclick="validar()" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+
+
+@section scripts {
+    <script>
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+        (function () {
+            'use strict';
+            window.addEventListener('load', function () {
+                // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                var forms = document.getElementsByClassName('needs-validation');
+                // Loop over them and prevent submission
+                var validation = Array.prototype.filter.call(forms, function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+
+        $('#validate').click(function () {
+
+
+        });
+
+        function validar() {
+            if ($('input[id="radio1"]').is(':checked') || $('input[id="radio2"]').is(':checked') || $('input[id="radio3"]').is(':checked') || $('input[id="radio4"]').is(':checked') || $('input[id="radio5"]').is(':checked')) {
+
+                } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Seleccione una calificación de la atención brindada.'
+                })
+                }
+
+            }
+    </script>
+
+}

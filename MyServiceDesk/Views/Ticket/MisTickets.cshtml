@@ -80,9 +80,7 @@
                         <thead class="table-dark">
                             <tr>
                                 <th class="text-center">Fec. Asig.</th>
-                                <th class="text-center">Días en MKTG</th>
                                 <th class="text-center">Tema</th>
-                                <th class="text-center"># de Piezas</th>
                                 <th class="text-center">Responsable</th>
                                 <th class="text-center">Fec. Entrega.</th>
                                 <th class="text-center">Estado</th>
@@ -97,39 +95,11 @@
                                     <td class="td-sistema" style="text-align: center;" data-order="@ticket.GetFechaFormateada("", ticket.FechaAsignacion)">
                                         @ticket.GetFechaFormateada("tabla", ticket.FechaAsignacion)
                                     </td>
-                                    <td class="td-sistema" style="text-align: center;">
-                                        @if (ticket.diasEnMKTG != 0)
-                                        {
-                                            @ticket.diasEnMKTG
-                                        }
-                                        else
-                                        {
-                                            <label>-</label>
-                                        }
-                                    </td>
+                                    
                                     <td class="td-sistema" style="text-align: center;">
                                         @if (ticket.tema != null)
                                         {
                                             @ticket.tema
-                                        }
-                                        else
-                                        {
-                                            <label>-</label>
-                                        }
-                                    </td>
-                                    <td class="td-sistema" style="text-align: center;"
-                                        @*title="
-                                        @foreach (var tipoContenido in tipoDeContenidosX)
-                                            {
-                                                if (tipoContenido.id_ticket == ticket.IdTicket)
-                                                {
-                                                    @tipoContenido.tipocontenidoDesc
-                                            }
-                                        }
-                                        "*@>
-                                        @if (ticket.numeroPiezas != 0)
-                                        {
-                                            @ticket.numeroPiezas
                                         }
                                         else
                                         {
@@ -269,9 +239,9 @@
         //Parámetros del datatable
         const dataTableOptions = {
             columnDefs: [
-                { className: "centered", targets: [0, 1, 2, 3, 4, 5, 6, 7, 8] },
-                { orderable: false, targets: [3, 4, 5, 8] },
-                { searchable: false, targets: [3, 4, 5, 8] },
+                { className: "centered", targets: [0, 1, 2, 3, 4, 5, 6] },
+                { orderable: false, targets: [4, 6] },
+                { searchable: false, targets: [4, 6] },
                 { width: "15%", targets: [] }
             ],
             destroy: true,

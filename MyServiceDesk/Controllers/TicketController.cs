@@ -63,8 +63,9 @@ namespace MyServiceDesk.Controllers
             ViewBag.etapas = gestUtilidades.ListarEtapa();
             ViewBag.tipoDeContenidos = gestUtilidades.ListarTipoDeContenidos();
             ViewBag.prioridades = gestUtilidades.ListarPrioridades();
-            ViewBag.listarTipoDeContenido = gestUtilidades.ListarTipoDeContenidoPorID();
             */
+            ViewBag.listarTipoDeContenido = gestUtilidades.ListarTipoDeContenidoPorID();
+            ViewBag.tipoDeContenidos = gestUtilidades.ListarTipoDeContenidos();
             ViewBag.categorias = gestUtilidades.ListarCategorias().Where(c => c.EsActivo).ToList();
             BE.BEUsuario usuario = Session["usuario"] == null ? new BE.BEUsuario() : Session["usuario"] as BE.BEUsuario;
             ViewBag.esAdmin = usuario.RolesUsuario.FindIndex(r => r.NombreRol == "Administrador") >= 0;

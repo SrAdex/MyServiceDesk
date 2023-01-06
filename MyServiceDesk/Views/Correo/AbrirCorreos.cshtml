@@ -383,17 +383,9 @@
                 function (respuesta) {
                     console.log(respuesta);
                     if (respuesta.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Listo',
-                            text: respuesta.mensaje
-                        })
+                        toastr.success(respuesta.mensaje);
                     } else {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Listo',
-                            text: respuesta.mensaje
-                        })
+                       toastr.error(respuesta.mensaje);
                     }
 
                 }).fail(function (error) {

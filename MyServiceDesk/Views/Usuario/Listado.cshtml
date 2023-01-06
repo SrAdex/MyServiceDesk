@@ -36,19 +36,19 @@
                             @foreach (var usuario in Model)
                             {
                                 <tr>
-                                    <td class="td-sistema">
+                                    <td class="text-center">
                                         @usuario.IdUsuario
                                     </td>
-                                    <td class="td-ellipsis td-sistema">
+                                    <td class="text-center">
                                         @usuario.NombreCompleto
                                     </td>
-                                    <td class="td-sistema">
+                                    <td class="text-center">
                                         @usuario.CorreoUsuario
                                     </td>
-                                    <td class="td-sistema">
+                                    <td class="text-center">
                                         @(usuario.EsActivo ? "Activo" : "Eliminado")
                                     </td>
-                                    <td class="text-center td-sistema">
+                                    <td class="text-center">
                                         @*<a href="@Url.Action("Editar", "Usuario", new { id = usuario.IdUsuario})">
                                                 <i class="fa fa-edit"></i>
                                             </a>*@
@@ -372,14 +372,7 @@
                     $.post('@Url.Action("Eliminar", "Usuario")', { id: idColaborador },
                         function (respuesta) {
                             if (respuesta.success) {
-                                Swal.fire({
-                                    position: 'center',
-                                    icon: 'success',
-                                    title: 'Se actualizó el estado del usuario a "eliminado"',
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                })
-                                setTimeout(function () { location.reload(); }, 1500);
+                                toastr.warning("Se actualizó el estado del usuario a Eliminado");
                             } else {
                                 Swal.fire(
                                     '¡Error!',
@@ -397,36 +390,22 @@
         }
 
         var strValue = "@((string)TempData["tipoAlerta"])";
+
         if (strValue == "alert-success") {
-            Swal.fire({
-                icon: 'success',
-                title: 'Listo',
-                text: 'Usuario editado correctamente.'
-            })
+            toastr.success("Usuario editado correctamente.");
+            
         }
 
         if (strValue == "alert alert-success") {
-            Swal.fire({
-                icon: 'success',
-                title: 'Listo',
-                text: 'Usuario registrado correctamente.'
-            })
+            toastr.success("Usuario registrado correctamente.");
         }
 
         if (strValue == "alert-danger") {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Ocurrió un problema al actualizar usuario.'
-            })
+            toastr.error("Ocurrió un problema al actualizar usuario.")
         }
 
         if (strValue == "alert alert-danger") {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Ocurrió un problema al registrar usuario.'
-            })
+            toastr.error("Ocurrió un problema al registrar usuario.")
         }
     </script>
 }
