@@ -219,3 +219,6 @@ C:\ADEX\MyServiceDesk\MyServiceDesk\MyServiceDesk\obj\Debug\MyServiceDesk.pdb
 D:\Proyectos\Sol_MyServiceDesk2\MyServiceDesk\bin\HtmlAgilityPack.dll
 D:\Proyectos\Sol_MyServiceDesk2\MyServiceDesk\bin\HtmlAgilityPack.pdb
 D:\Proyectos\Sol_MyServiceDesk2\MyServiceDesk\bin\HtmlAgilityPack.xml
+C:\ADEX\MyServiceDesk\MyServiceDesk\MyServiceDesk\bin\HtmlAgilityPack.dll
+C:\ADEX\MyServiceDesk\MyServiceDesk\MyServiceDesk\bin\HtmlAgilityPack.pdb
+C:\ADEX\MyServiceDesk\MyServiceDesk\MyServiceDesk\bin\HtmlAgilityPack.xml

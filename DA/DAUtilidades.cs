@@ -203,5 +203,33 @@ namespace DA
 
             return TDCxTickets;
         }
+
+        public List<BE.BETipoDeContenido> ListarTipoDeContenidos()
+        {
+            List<BE.BETipoDeContenido> TipoDeContenidos = new List<BE.BETipoDeContenido>();
+
+            using (SqlConnection con = DAConexionBD.ObtenerConexion())
+            {
+                SqlCommand cmd = new SqlCommand("usp_Listar_TipoDeContenido", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                con.Open();
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    BE.BETipoDeContenido tipoDeContenido = new BE.BETipoDeContenido
+                    {
+                        id_tipocontenido = dr.GetInt32(0),
+                        descripcion = dr.GetString(1)
+                    };
+
+                    TipoDeContenidos.Add(tipoDeContenido);
+                }
+                dr.Close();
+                con.Close();
+            }
+
+            return TipoDeContenidos;
+        }
     }
 }

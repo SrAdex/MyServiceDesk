@@ -1,0 +1,43 @@
+﻿
+
+input[type="radio"] {
+    display: none;
+}
+
+label {
+    color: grey;
+    font-size: 1.5rem;
+}
+
+.clasificacion {
+    direction: rtl;
+    unicode-bidi: bidi-override;
+}
+
+.fa-star:hover,
+label:hover ~ label {
+    cursor: pointer;
+    color: #0275d8;
+}
+
+input[type="radio"]:checked ~ label {
+    color: #0275d8;
+}
+
+/*.gremio {
+    width: 23%;
+    height: 10%;
+}
+
+.instituto {
+    width: 23%;
+    height: 8%;
+}*/
+
+.logo {
+    width: 5px;
+}
+
+.invalid-feedback {
+    font-size: 12px;
+}

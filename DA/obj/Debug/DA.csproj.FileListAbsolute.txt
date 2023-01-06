@@ -79,7 +79,6 @@ C:\ADEX\MyServiceDesk\MyServiceDesk\DA\bin\Debug\System.Web.Razor.dll
 C:\ADEX\MyServiceDesk\MyServiceDesk\DA\bin\Debug\System.Web.WebPages.Deployment.dll
 C:\ADEX\MyServiceDesk\MyServiceDesk\DA\bin\Debug\System.Web.WebPages.dll
 C:\ADEX\MyServiceDesk\MyServiceDesk\DA\bin\Debug\System.Web.WebPages.Razor.dll
-C:\ADEX\MyServiceDesk\MyServiceDesk\DA\bin\Debug\HtmlAgilityPack.NetCore.dll
 C:\ADEX\MyServiceDesk\MyServiceDesk\DA\bin\Debug\BE.pdb
 C:\ADEX\MyServiceDesk\MyServiceDesk\DA\bin\Debug\AE.Net.Mail.pdb
 C:\ADEX\MyServiceDesk\MyServiceDesk\DA\bin\Debug\BouncyCastle.Crypto.xml
@@ -116,3 +115,6 @@ C:\ADEX\MyServiceDesk\MyServiceDesk\DA\obj\Debug\DA.pdb
 D:\Proyectos\Sol_MyServiceDesk2\DA\bin\Debug\HtmlAgilityPack.dll
 D:\Proyectos\Sol_MyServiceDesk2\DA\bin\Debug\HtmlAgilityPack.pdb
 D:\Proyectos\Sol_MyServiceDesk2\DA\bin\Debug\HtmlAgilityPack.xml
+C:\ADEX\MyServiceDesk\MyServiceDesk\DA\bin\Debug\HtmlAgilityPack.dll
+C:\ADEX\MyServiceDesk\MyServiceDesk\DA\bin\Debug\HtmlAgilityPack.pdb
+C:\ADEX\MyServiceDesk\MyServiceDesk\DA\bin\Debug\HtmlAgilityPack.xml

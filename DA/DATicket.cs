@@ -639,7 +639,7 @@ namespace DA
                                 "<b>Estado: </b>" + detalleTicket.etapa + "</br> </br>" +
                                 "<b>¡Favor de NO responder este correo!</b> </br> </br>" +
                                 "Atemtamente, </br>" +
-                                "Mesa de Servicio ADEX Marketing",
+                                "Mesa de Servicio ADEX RRHH",
 
                         BodyEncoding = System.Text.Encoding.UTF8,
                         Subject = "Actualización de Ticket - " + detalleTicket.AsuntoTicket,
@@ -809,7 +809,7 @@ namespace DA
                                 //"Puede revisar el ticket en el siguiente enlace: <a href='" + enlace + "' >Visualizar Ticket</a> </br> </br> " +
                                 "<b>¡Favor de NO responder este correo!</b> </br> </br>" +
                                 "Atemtamente, </br>" +
-                                "Mesa de Servicio ADEX Marketing",
+                                "Mesa de Servicio ADEX RRHH",
 
                         BodyEncoding = System.Text.Encoding.UTF8,
                         Subject = "Solicitud Rechazada - " + detalleTicket.AsuntoTicket,
