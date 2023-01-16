@@ -143,12 +143,12 @@
                 </li>
 
                 <!-- Divider -->
-                <!--<hr class="sidebar-divider d-none d-md-block">-->
+                <hr class="sidebar-divider d-none d-md-block">
 
                 <!-- Sidebar Toggler (Sidebar) -->
-                <!--<div class="text-center d-none d-md-inline">-->
-                <!--<button class="rounded-circle border-0" id="sidebarToggle"></button>-->
-                <!--</div>-->
+                <div class="text-center d-none d-md-inline">
+                    <button class="rounded-circle border-0" id="sidebarToggle"></button>
+                </div>
 
                 <!-- Sidebar Message -->
 
@@ -185,36 +185,36 @@
                 </div>
 
                 <!-- Divider -->
-                <!--<hr class="sidebar-divider d-none d-md-block">-->
+                <hr class="sidebar-divider d-none d-md-block">
 
                 <!-- Sidebar Toggler (Sidebar) -->
-                <!--<div class="text-center d-none d-md-inline">-->
-                <!--<button class="rounded-circle border-0" id="sidebarToggle"></button>-->
-                <!--</div>-->
+                <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+                </div>
 
                 <!-- Sidebar Message -->
             }
 
             <!-- Nav Item - Desde BD -->
             @*@foreach (var modulo in modulos)
-                {
-                    <li class="nav-item">
-                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="@modulo.collapse"
-                           aria-expanded="true" aria-controls="@modulo.collapse">
-                            <i class="fas fa-fw fa-cog"></i>
-                            <span class="hide-menu">@modulo.Nombre</span>
-                        </a>
-                        <div id="@modulo.collapse" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                            <div class="bg-white py-2 collapse-inner rounded">
-                                <h6 class="collapse-header">@modulo.Nombre opciones:</h6>
-                                @foreach (var operacion in operaciones.Where(o => o.IdModulo == modulo.IdModulo && o.MostrarEnMenu))
-                                {
-                                    <a class="collapse-item" href="@Url.Content(operacion.Ruta)">@operacion.Nombre</a>
-                                }
-                            </div>
-                        </div>
-                    </li>
-                }*@
+        {
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="@modulo.collapse"
+                   aria-expanded="true" aria-controls="@modulo.collapse">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span class="hide-menu">@modulo.Nombre</span>
+                </a>
+                <div id="@modulo.collapse" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">@modulo.Nombre opciones:</h6>
+                        @foreach (var operacion in operaciones.Where(o => o.IdModulo == modulo.IdModulo && o.MostrarEnMenu))
+                        {
+                            <a class="collapse-item" href="@Url.Content(operacion.Ruta)">@operacion.Nombre</a>
+                        }
+                    </div>
+                </div>
+            </li>
+        }*@
 
         </ul>
         <!-- End of Sidebar -->
@@ -293,7 +293,6 @@
             </div>
 
             <div class="container-fluid">
-                <partial name="_Notification" />
                 @RenderBody()
 
             </div>

@@ -609,29 +609,18 @@
         }
 
         var strValue = "@((string)TempData["mensaje"])";
+
         if (strValue == "Asignado Correctamente") {
-            Swal.fire({
-                icon: 'success',
-                title: 'Listo',
-                text: 'Solicitud aceptada correctamente'
-            })
+            toastr.success("Solicitud aceptada correctamente")
         }
+
         if (strValue == "Ticket Asignado correctamente") {
-            Swal.fire({
-                icon: 'success',
-                title: 'Listo',
-                text: 'Solicitud asignada correctamente'
-            })
+            toastr.success("Solicitud asignada correctamente")
         }
 
         if (strValue == "Solicitud eliminada satisfactoriamente") {
-            Swal.fire({
-                icon: 'success',
-                title: 'Listo',
-                text: 'Solicitud eliminada satisfactoriamente'
-            })
+            toastr.warning("Solicitud eliminada satisfactoriamente")
         }
-
 
     </script>
 
