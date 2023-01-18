@@ -81,7 +81,6 @@
                             <tr>
                                 <th class="text-center">Fec. Asig.</th>
                                 <th class="text-center">Tema</th>
-                                <th class="text-center">Responsable</th>
                                 <th class="text-center">Fec. Entrega.</th>
                                 <th class="text-center">Estado</th>
                                 <th class="text-center">Operaciones</th>
@@ -106,14 +105,6 @@
                                         }
                                     </td>
                                     
-                                    <td class="td-sistema" style="text-align: center;">
-                                        <h5>
-                                            <div class="badge badge-info" title="@ticket.UsuarioResponsable">
-                                                @ticket.InicialesResponsable
-                                            </div>
-                                        </h5>
-
-                                    </td>
                                     <td class="td-sistema" style="text-align: center;">
                                         @if (ticket.FechaEntrega != null)
                                         {
@@ -222,9 +213,9 @@
         //Parámetros del datatable
         const dataTableOptions = {
             columnDefs: [
-                { className: "centered", targets: [0, 1, 2, 3, 4, 5, 6] },
-                { orderable: false, targets: [4, 6] },
-                { searchable: false, targets: [4, 6] },
+                { className: "centered", targets: [0, 1, 2, 3, 4] },
+                { orderable: false, targets: [3, 4] },
+                { searchable: false, targets: [3, 4] },
                 { width: "15%", targets: [] }
             ],
             destroy: true,
