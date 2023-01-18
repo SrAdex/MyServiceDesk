@@ -138,9 +138,7 @@
                         <thead class="table-dark">
                             <tr>
                                 <th class="text-center td-sistema">Fec. Recepción</th>
-                                <th class="text-center">Fec. Entrega</th>
                                 <th class="text-center">Asunto</th>
-                                <th class="text-center">Responsable</th>
                                 <th class="text-center">Estado</th>
                                 <th class="text-center td-sistema">Operaciones</th>
                             </tr>
@@ -152,29 +150,9 @@
                                     <td class="td-sistema" data-order="@ticket.GetFechaFormateada("", ticket.FechaGeneracion)">
                                         @ticket.GetFechaFormateada("tabla", ticket.FechaGeneracion)
                                     </td>
-                                    <td class="td-sistema" style="text-align: center;">
-                                        @if (ticket.FechaEntrega != null)
-                                        {
-                                            @Convert.ToDateTime(ticket.FechaEntrega).ToString("dd/MM/yyyy")
-                                        }
-                                        else
-                                        {
-                                            <label>-</label>
-                                        }
-
-                                    </td>
                                     
                                     <td class="td-sistema" style="text-align: left;">
                                         @ticket.AsuntoTicket
-                                    </td>
-                                    
-                                    <td class="td-sistema" style="text-align: center;">
-                                        <h5>
-                                            <div class="badge badge-info" title="@ticket.UsuarioResponsable">
-                                                @ticket.InicialesResponsable
-                                            </div>
-                                        </h5>
-
                                     </td>
                                     
                                     <td class="td-sistema">
@@ -218,7 +196,7 @@
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
 
-            @using (Html.BeginForm("GenerarFlujo", "Ticket", FormMethod.Post))
+            @using (Html.BeginForm("AsignarTicket", "Ticket", FormMethod.Post))
             {
                 <div class="modal-header">
                     <h3>Asignación y Categorización de Ticket</h3>
@@ -228,76 +206,38 @@
                 </div>
 
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="col-form-label">Responsable</label>
-                                <select id="idUsuarioResponsable" required name="idUsuarioResponsable" class="custom-select custom-select" data-width="75%" data-live-search="true">
-                                    @foreach (var responsable in usuariosResponsables)
-                                    {
-                                        if (responsable.IdUsuario != 0)
-                                        {
-                                            <option value="@responsable.IdUsuario">@responsable.NombreCompleto</option>
-                                        }
-                                    }
-                                </select>
-                                @Html.Hidden("idTicket", "", new { id = "txtIdTicket" })
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="col-form-label">Fecha de Entrega</label>
-                                <div class="md-form md-outline input-with-post-icon datepicker" id="prefill">
-                                    <input required placeholder="Select date" type="date" id="fechaEntrega" class="form-control" name="fechaEntrega">
-                                </div>
-                            </div>
-                        </div>
+
+                    <div class="form-group">
+                        <label class="col-form-label">Usuario Responsable</label>
+                        <select id="cboResponsableAsignado" name="idUsuarioResponsable" class="custom-select overflow-auto">
+                            <option value="0">Sin Responsable Asignado</option>
+                            @foreach (var responsable in usuariosResponsables)
+                            {
+                                <option value="@responsable.IdUsuario">@responsable.NombreCompleto</option>
+                            }
+                        </select>
+                        @Html.Hidden("idTicket", "", new { id = "txtIdTicket" })
                     </div>
 
                     <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label class="col-form-label">Tema</label>
-                                <input type="text" required class="form-control" id="tema" name="tema">
-                            </div>
-                        </div>
-                        <!--<div class="col-md-6">
-                            <div class="form-group">
-                                <label class="col-form-label">Prioridad</label>
-                                <select id="idPrioridad" name="idPrioridad" required class="custom-select custom-select" data-width="100%" data-live-search="true">
-                                   //foreach (var prioridad in prioridades)
-                                   // {
-                                        //if (responsable.IdUsuario != 1)
-                                        //{
-                                        <option value="prioridad.id_prioridad">prioridad.descripcion</option>-->
-                        @*}*@
-                        <!--//}
-                                </select>
-                            </div>
-                        </div>-->
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="col-form-label">Descripción</label>
-                                <textarea class="form-control" required id="descripcion" name="descripcion" rows="5"></textarea>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="col-form-label">Tipo De Contenido</label>
-                            <select id="tipoDeContenido" name="tipoDeContenido" required class="custom-select custom-select" size="6" data-width="100%" data-live-search="true" multiple>
-                                @foreach (var tdc in tipoDeContenidos)
+                        <div class="form-group col-md-6">
+                            <label class="form-label">Categoría</label>
+                            <select name="idCategoria" class="custom-select" id="cboCategoria">
+                                <option value="0">--Seleccione--</option>
+                                @foreach (var item in ViewBag.categorias as IEnumerable<BECategoria>)
                                 {
-                                    //if (responsable.IdUsuario != 1)
-                                    //{
-                                    <option value="@tdc.id_tipocontenido">@tdc.descripcion</option>
-                                    @*}*@
+                                    <option value="@item.IdCategoria">@item.Nombre</option>
                                 }
                             </select>
                         </div>
+
+                        <div class="form-group col-md-6">
+                            <label class="form-label">SubCategoría</label>
+                            <select name="idSubcategoria" required class="custom-select" id="cboSubCategoria">
+                            </select>
+                        </div>
                     </div>
+
                 </div>
 
                 <div class="modal-footer">
@@ -393,10 +333,10 @@
         //Parámetros de Datatable
         const dataTableOptions = {
             columnDefs: [
-                { className: "centered", targets: [0, 1, 2, 3, 4, 5] },
-                { orderable: false, targets: [3, 4, 5] },
-                { searchable: false, targets: [3, 4, 5] },
-                {width: "20%", targets: [4]}
+                { className: "centered", targets: [0, 1, 2, 3] },
+                { orderable: false, targets: [2, 3] },
+                { searchable: false, targets: [3] },
+                {width: "22%", targets: [2]}
             ],
             destroy: true,
             language: {
