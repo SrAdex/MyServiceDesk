@@ -25,6 +25,7 @@ namespace MyServiceDesk.Controllers
             IEnumerable<BE.BECorreo> correos = new List<BE.BECorreo>();
             correos = gestionCorreo.ListarCorreosPorTicket(id);
             ViewBag.estados = gestUtilidades.ListarEstados();
+            ViewBag.usuarios = gestUtilidades.ListarUsuarios();
             //ViewBag.listarTipoDeContenido = gestUtilidades.ListarTipoDeContenidoPorID();
 
             foreach (var correo in correos)

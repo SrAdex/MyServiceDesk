@@ -4,6 +4,7 @@
 @{
     BE.ViewModels.DetalleTicketViewModel ticket = ViewBag.detalleTicket as BE.ViewModels.DetalleTicketViewModel;
     List<BE.BEEstado> estados = ViewBag.estados as List<BE.BEEstado>;
+    List<BE.ViewModels.UsuarioViewModel> usuarios = ViewBag.usuarios as List<BE.ViewModels.UsuarioViewModel>;
     ViewBag.Title = "Abrir Correos";
     List<BE.TDCxTicket> tipoDeContenidos = ViewBag.listarTipoDeContenido as List<BE.TDCxTicket>;
     string fechaCierre = Convert.ToDateTime(ticket.fechaEntrega).ToString("yyyy-MM-dd");
@@ -53,7 +54,16 @@
                                 <td class="td-detalle">Prioridad: </td>
                                 <td class="td-detalle"><span class="detalle">@ticket.prioridad</span></td>
                                 <td class="td-detalle">Responsable: </td>
-                                <td class="td-detalle"><span class="detalle">@ticket.UsuarioResponsable</span></td>
+                                <td class="td-detalle">
+                                    <select name="IdResponsable" id="@("cboResponsable_" + ticket.IdTicket)" class="custom-select" onchange="actualizaResponsable(@ticket.IdTicket)">
+                                        @foreach (var usuario in usuarios)
+                                        {
+                                            <option value="@usuario.IdUsuario" @(ticket.UsuarioResponsable == usuario.NombreCompleto? "selected" : "")>
+                                                @(usuario.NombreCompleto)
+                                            </option>
+                                        }
+                                    </select>
+                                </td>
                             </tr>
                             <tr>
                                 <td class="td-detalle">Tema: </td>
@@ -371,6 +381,25 @@
                 error: function (request, error) {
                     alert("Error al obtener los datos de respuesta.");
                 }
+            });
+        }
+
+        function actualizaResponsable(idTicket) {
+            /*alert(idTicket);*/
+            var select = document.getElementById("cboResponsable_" + idTicket);
+            var idEstado = select.options[select.selectedIndex].value;
+
+            $.post('@Url.Action("ActualizarEstadoTicket", "Ticket")', { idTicket: idTicket, idEstado: idEstado },
+                function (respuesta) {
+                    console.log(respuesta);
+                    if (respuesta.success) {
+                        toastr.success(respuesta.mensaje);
+                    } else {
+                       toastr.error(respuesta.mensaje);
+                    }
+
+                }).fail(function (error) {
+                    console.log(error);
             });
         }
 

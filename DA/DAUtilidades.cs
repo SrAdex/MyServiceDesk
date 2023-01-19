@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using BE.ViewModels;
 
 namespace DA
 {
@@ -230,6 +231,37 @@ namespace DA
             }
 
             return TipoDeContenidos;
+        }
+
+        public IEnumerable<UsuarioViewModel> ListarUsuarios()
+        {
+            List<UsuarioViewModel> usuarios = new List<UsuarioViewModel>();
+
+            using (SqlConnection con = DAConexionBD.ObtenerConexion())
+            {
+                SqlCommand cmd = new SqlCommand("USP_LISTAR_USUARIOS", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                con.Open();
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    UsuarioViewModel usuario = new UsuarioViewModel
+                    {
+                        IdUsuario = dr.GetInt32(0),
+                        NombreCompleto = dr.GetString(1),
+                        CorreoUsuario = dr.GetString(2),
+                        EsActivo = dr.GetBoolean(3)
+                    };
+
+                    usuarios.Add(usuario);
+                }
+
+                dr.Close();
+                con.Close();
+            }
+
+            return usuarios;
         }
     }
 }
