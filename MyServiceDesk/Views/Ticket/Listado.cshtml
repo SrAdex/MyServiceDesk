@@ -167,16 +167,16 @@
                                     </td>
                                     
                                     <td class="td-sistema" style="text-align: center;">
-                                        <a href="@Url.Action("AbrirCorreos", "Correo", new { id = ticket.IdTicket})">
+                                        <a class="text-decoration-none" href="@Url.Action("AbrirCorreos", "Correo", new { id = ticket.IdTicket})">
                                             <i class="fas fa-envelope fa-fw"></i>
                                         </a>
-                                        <a href="#" onclick="modalAsignacion(@ticket.IdTicket)">
+                                        <a href="#" class="text-decoration-none" onclick="modalAsignacion(@ticket.IdTicket)">
                                             <i class="fas fa-user-plus"></i>
                                         </a>
-                                        <a href="#" onclick="verDetalle('@ticket.IdTicket')">
+                                        <a href="#" class="text-decoration-none" onclick="verDetalle('@ticket.IdTicket')">
                                             <i class="fas fa-star"></i>
                                         </a>
-                                        <a href="#" onclick="modalRechazo('@ticket.IdTicket')">
+                                        <a href="#" class="text-decoration-none" onclick="modalRechazo('@ticket.IdTicket')">
                                             <i class="fas fa-ban"></i>
                                         </a>
                                         @*<i class="fas fa-star" onclick="verDetalle('@ticket.IdTicket')"></i>*@

@@ -80,8 +80,7 @@
                         <thead class="table-dark">
                             <tr>
                                 <th class="text-center">Fec. Asig.</th>
-                                <th class="text-center">Tema</th>
-                                <th class="text-center">Fec. Entrega.</th>
+                                <th class="text-center">Asunto</th>
                                 <th class="text-center">Estado</th>
                                 <th class="text-center">Operaciones</th>
                             </tr>
@@ -95,9 +94,9 @@
                                     </td>
                                     
                                     <td class="td-sistema" style="text-align: center;">
-                                        @if (ticket.tema != null)
+                                        @if (ticket.AsuntoTicket != null)
                                         {
-                                            @ticket.tema
+                                            @ticket.AsuntoTicket
                                         }
                                         else
                                         {
@@ -105,17 +104,6 @@
                                         }
                                     </td>
                                     
-                                    <td class="td-sistema" style="text-align: center;">
-                                        @if (ticket.FechaEntrega != null)
-                                        {
-                                            @Convert.ToDateTime(ticket.FechaEntrega).ToString("dd/MM/yyyy")
-                                        }
-                                        else
-                                        {
-                                            <label>-</label>
-                                        }
-
-                                    </td>
                                     <td class="td-sistema">
                                         <select name="select" id="@("cboEstado_" + ticket.IdTicket)" class="custom-select text-sm-left" onchange="actualizaEstado(@ticket.IdTicket)">
                                             @foreach (var estado in estados)
@@ -213,9 +201,9 @@
         //Parámetros del datatable
         const dataTableOptions = {
             columnDefs: [
-                { className: "centered", targets: [0, 1, 2, 3, 4] },
-                { orderable: false, targets: [3, 4] },
-                { searchable: false, targets: [3, 4] },
+                { className: "centered", targets: [0, 1, 2, 3] },
+                { orderable: false, targets: [2, 3] },
+                { searchable: false, targets: [2, 3] },
                 { width: "15%", targets: [] }
             ],
             destroy: true,

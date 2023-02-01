@@ -261,6 +261,10 @@ namespace DA
                 con.Close();
             }
 
+            UsuarioViewModel defaultUsuario = new UsuarioViewModel() { IdUsuario = 0, NombreCompleto = "--Seleccione--", EsActivo = true };
+
+            usuarios.Insert(0, defaultUsuario);
+
             return usuarios;
         }
     }

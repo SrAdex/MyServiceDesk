@@ -26,6 +26,7 @@ namespace MyServiceDesk.Controllers
             correos = gestionCorreo.ListarCorreosPorTicket(id);
             ViewBag.estados = gestUtilidades.ListarEstados();
             ViewBag.usuarios = gestUtilidades.ListarUsuarios();
+            ViewBag.categorias = gestUtilidades.ListarCategorias().Where(c => c.EsActivo).ToList();
             //ViewBag.listarTipoDeContenido = gestUtilidades.ListarTipoDeContenidoPorID();
 
             foreach (var correo in correos)
