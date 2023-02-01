@@ -262,8 +262,8 @@ namespace DA
                     detalleTicket.UsuarioResponsable = dr.GetString(2);
                     detalleTicket.FechaAsignación = dr.IsDBNull(3) ? (DateTime?)null : dr.GetDateTime(3);
                     detalleTicket.FechaCierre = dr.IsDBNull(4) ? (DateTime?)null : dr.GetDateTime(4);
-                    detalleTicket.SubCategoriaTicket = dr.GetString(5);
-                    detalleTicket.CategoriaTicket = dr.GetString(6);
+                    detalleTicket.CategoriaTicket = dr.GetString(5);
+                    detalleTicket.SubCategoriaTicket = dr.GetString(6);
                     detalleTicket.EstadoTicket = dr.GetString(7);
                     detalleTicket.IdTicket = dr.GetInt32(8);
                     detalleTicket.PropietarioTicket = dr.IsDBNull(9) ? "-" : dr.GetString(9);

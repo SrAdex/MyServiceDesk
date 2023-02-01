@@ -5,6 +5,7 @@
     BE.ViewModels.DetalleTicketViewModel ticket = ViewBag.detalleTicket as BE.ViewModels.DetalleTicketViewModel;
     List<BE.BEEstado> estados = ViewBag.estados as List<BE.BEEstado>;
     List<BE.ViewModels.UsuarioViewModel> usuarios = ViewBag.usuarios as List<BE.ViewModels.UsuarioViewModel>;
+    List<BE.BECategoria> categorias = ViewBag.categorias as List<BE.BECategoria>;
     ViewBag.Title = "Abrir Correos";
     List<BE.TDCxTicket> tipoDeContenidos = ViewBag.listarTipoDeContenido as List<BE.TDCxTicket>;
     string fechaCierre = Convert.ToDateTime(ticket.fechaEntrega).ToString("yyyy-MM-dd");
@@ -38,24 +39,10 @@
                                 <td class="td-detalle"><span class="detalle">@ticket.GetFechaFormateada(ticket.FechaCierre)</span></td>
                             </tr>
                             <tr>
-                                <td class="td-detalle">Fecha Entrega:</td>
-                                <td class="td-detalle">
-                                    @if (ticket.fechaEntrega == null)
-                                    {
-                                        <span class="detalle">-</span>
-                                    }
-                                    else
-                                    {
-                                        <input required placeholder="Select date" type="date" id="fechaEntrega" onchange="actualizaFecha(@ticket.IdTicket)" class="form-control" name="fechaEntrega" value="@fechaCierre">
-                                        @*<span class="detalle">@Convert.ToDateTime(ticket.fechaEntrega).ToString("dd/MM/yyyy")</span>*@
-                                    }
-
-                                </td>
-                                <td class="td-detalle">Prioridad: </td>
-                                <td class="td-detalle"><span class="detalle">@ticket.prioridad</span></td>
+                               
                                 <td class="td-detalle">Responsable: </td>
-                                <td class="td-detalle">
-                                    <select name="IdResponsable" id="@("cboResponsable_" + ticket.IdTicket)" class="custom-select" onchange="actualizaResponsable(@ticket.IdTicket)">
+                                <td class="td-detalle w-25">
+                                    <select name="IdResponsable" id="@("cboResponsable_" + ticket.IdTicket)" class="custom-select">
                                         @foreach (var usuario in usuarios)
                                         {
                                             <option value="@usuario.IdUsuario" @(ticket.UsuarioResponsable == usuario.NombreCompleto? "selected" : "")>
@@ -64,29 +51,25 @@
                                         }
                                     </select>
                                 </td>
-                            </tr>
-                            <tr>
-                                <td class="td-detalle">Tema: </td>
-                                <td class="td-detalle"><span class="detalle">@ticket.tema</span></td>
-                                <td class="td-detalle">Descripción: </td>
-                                <td class="td-detalle"><span class="detalle">@ticket.descripcion</span></td>
-                                <td class="td-detalle">Tipo de Contenido: </td>
-                                
-                                @*<td class="td-detalle">
-                                    <ul>
-                                        @foreach (var tipoContenido in tipoDeContenidos)
+                                <td>Categoría</td>
+                                <td class="td-detalle w-25">
+                                    <select name="idCategoria" class="custom-select" id="cboCategoria">
+                                        <option value="0">--Seleccione--</option>
+                                        @foreach (var item in categorias)
                                         {
-                                            if (tipoContenido.id_ticket == ticket.IdTicket)
-                                            {
-                                                <li>
-                                                    @tipoContenido.tipocontenidoDesc
-                                                </li>
-                                            }
+                                            <option value="@item.IdCategoria" @(ticket.CategoriaTicket == item.Nombre ? "selected" : "")>
+                                                @(item.Nombre)
+                                            </option>
                                         }
-                                    </ul>
-                                </td>*@
-
+                                    </select>
+                                </td>
+                                <td>Sub Categoría</td>
+                                <td class="td-detalle w-25">
+                                    <select name="idSubcategoria" required class="custom-select" id="cboSubCategoria">
+                                    </select>
+                                </td>
                             </tr>
+                            
                             <tr>
                                 <td class="td-sistema">Etapa:</td>
                                 <td class="td-detalle">
@@ -331,20 +314,39 @@
         var strValue = "@((string)TempData["alerta"])";
         var strMensaje = "@((string)TempData["mensaje"])";
         if (strValue == "alert alert-success") {
-            Swal.fire({
-                icon: 'success',
-                title: 'Listo',
-                text: strMensaje
-            })
+            toastr.success(strMensaje);
         }
         if (strValue == "alert alert-danger"){
-            Swal.fire({
-                type: 'error',
-                title: 'Error',
-                text: strMensaje,
-            });
+            toastr.error(strMensaje);
         }
 
+        $(document).ready(function () {
+
+            let comboCategorias = $("#cboCategoria");
+
+
+            function refresh() {
+                $.ajax({
+                    url: '@Url.Action("ListarSubCategorias", "Util")' + '?idCategoriaSuperior=' + comboCategorias.val(),
+                    type: 'GET',
+                    success: function (subCategorias) {
+                        $("#cboSubCategoria").empty();
+                        $("#cboSubCategoria").append('<option value="">--Seleccione--</option>');
+                        $(subCategorias).each(function (i, v) { // indice, valor
+                            $("#cboSubCategoria").append('<option value="' + v.IdCategoria + '">' + v.Nombre + '</option>');
+                        })
+                    },
+
+                });
+            };
+
+            comboCategorias.on('change', function () {
+                refresh();
+            })
+
+            refresh();
+
+        });
 
         function setDatosRespuesta(codigoCorreo, idTicket, tipoRespuesta) {
 
