@@ -2,6 +2,9 @@
 @using BE.ViewModels;
 @using BE;
 @{
+
+    List<BE.BECategoria> subCategorias = ViewBag.subcategorias as List<BE.BECategoria> ?? new List<BECategoria>();
+
     BE.ViewModels.DetalleTicketViewModel ticket = ViewBag.detalleTicket as BE.ViewModels.DetalleTicketViewModel;
     List<BE.BEEstado> estados = ViewBag.estados as List<BE.BEEstado>;
     List<BE.ViewModels.UsuarioViewModel> usuarios = ViewBag.usuarios as List<BE.ViewModels.UsuarioViewModel>;
@@ -65,7 +68,14 @@
                                 </td>
                                 <td>Sub Categoría</td>
                                 <td class="td-detalle w-25">
-                                    <select name="idSubcategoria" required class="custom-select" id="cboSubCategoria">
+                                    <select name="idSubcategoria" id="cboSubCategoria" class="custom-select">
+                                        <option value="0">--Seleccione--</option>
+                                        @foreach (var item in subCategorias)
+                                        {
+                                            <option value="@item.IdCategoria" @(ticket.SubCategoriaTicket == item.Nombre ? "selected" : "")>
+                                                @(item.Nombre)
+                                            </option>
+                                        }
                                     </select>
                                 </td>
                             </tr>
@@ -343,9 +353,6 @@
             comboCategorias.on('change', function () {
                 refresh();
             })
-
-            refresh();
-
         });
 
         function setDatosRespuesta(codigoCorreo, idTicket, tipoRespuesta) {
@@ -391,7 +398,7 @@
             var select = document.getElementById("cboResponsable_" + idTicket);
             var idEstado = select.options[select.selectedIndex].value;
 
-            $.post('@Url.Action("ActualizarEstadoTicket", "Ticket")', { idTicket: idTicket, idEstado: idEstado },
+            $.post('@Url.Action("ActualizarEstadoTicket", "Ticket")', { idTicket: idTicket, idEstado: idEstado, IdCategoria: IdCategoria, idSubcategoria: idSubcategoria },
                 function (respuesta) {
                     console.log(respuesta);
                     if (respuesta.success) {
@@ -410,7 +417,7 @@
             var select = document.getElementById("cboEstado_" + idTicket);
             var idEstado = select.options[select.selectedIndex].value;
 
-            $.post('@Url.Action("ActualizarEstadoTicket", "Ticket")', { idTicket: idTicket, idEstado: idEstado },
+            $.post('@Url.Action("ActualizarEstadoTicket", "Ticket")', { idTicket: idTicket, idEstado: idEstado, IdCategoria: IdCategoria, idSubcategoria: idSubcategoria },
                 function (respuesta) {
                     console.log(respuesta);
                     if (respuesta.success) {
