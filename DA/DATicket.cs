@@ -198,7 +198,7 @@ namespace DA
             return tickets;
         }
 
-        public string AsignarTicket(int idTicket, int idUsuarioResponsable, int idSubCategoria)
+        public string AsignarTicket(int idTicket, int idUsuarioResponsable, int idCategoria, int idSubCategoria)
         {
             string mensaje = "";
             var usuarioResponsable = gestionUsuario.BuscarUsuario(idUsuarioResponsable);
@@ -211,14 +211,21 @@ namespace DA
                     cmd.CommandType = CommandType.StoredProcedure;
 
                     cmd.Parameters.AddWithValue("@id_usuario_modificacion", usuario.IdUsuario);
+
                     if (idUsuarioResponsable > 0)
                         cmd.Parameters.AddWithValue("@id_usuario_resposable", idUsuarioResponsable);
                     else
                         cmd.Parameters.AddWithValue("@id_usuario_resposable", DBNull.Value);
-                    if (idSubCategoria > 0)
-                        cmd.Parameters.AddWithValue("@id_categoria", idSubCategoria);
+
+                    if (idCategoria > 0)
+                        cmd.Parameters.AddWithValue("@id_categoria", idCategoria);
                     else
                         cmd.Parameters.AddWithValue("@id_categoria", DBNull.Value);
+
+                    if (idSubCategoria > 0)
+                        cmd.Parameters.AddWithValue("@id_subcategoria", idSubCategoria);
+                    else
+                        cmd.Parameters.AddWithValue("@id_subcategoria", DBNull.Value);
 
                     cmd.Parameters.AddWithValue("@id_ticket", idTicket);
 
@@ -329,7 +336,7 @@ namespace DA
             return mensaje;
         }
 
-        public string ActualizarEstadoTicket(int idTicket, int idEstado)
+        public string ActualizarEstadoTicket(int idTicket, int idEstado, int IdCategoria, int IdSubcategoria)
         {
             string mensaje = "";
             DetalleTicketViewModel detalleTicket = DetallarTicket(idTicket);
@@ -344,6 +351,8 @@ namespace DA
                 cmd.Parameters.AddWithValue("@id_usuario_modificacion", usuario.IdUsuario);
                 cmd.Parameters.AddWithValue("@id_ticket", idTicket);
                 cmd.Parameters.AddWithValue("@id_estado", idEstado);
+                cmd.Parameters.AddWithValue("@id_categoria", IdCategoria);
+                cmd.Parameters.AddWithValue("@id_subcategoria", IdSubcategoria);
 
 
                 if (cmd.ExecuteNonQuery() >= 1)
@@ -393,7 +402,7 @@ namespace DA
                     {
                         IdTicket = dr.GetInt32(0),
                         IdUsuarioResponsable = (dr.IsDBNull(1)) ? 0 : dr.GetInt32(1),
-                        IdSubcategoria = (dr.IsDBNull(2)) ? 0 : dr.GetInt32(2),
+                        //IdSubcategoria = (dr.IsDBNull(2)) ? 0 : dr.GetInt32(2),
                         IdCategoria = (dr.IsDBNull(3)) ? 0 : dr.GetInt32(3)
                     };
                 }
@@ -822,7 +831,7 @@ namespace DA
                     client.Send(message);
                     client.Dispose();
 
-                    ActualizarEstadoTicket(id, 6);
+                    ActualizarEstadoTicket(id, 6, 0, 0);
 
                     mensaje = "Notificación eliminada correctamente";
                 }

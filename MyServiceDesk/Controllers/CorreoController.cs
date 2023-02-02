@@ -27,7 +27,9 @@ namespace MyServiceDesk.Controllers
             ViewBag.estados = gestUtilidades.ListarEstados();
             ViewBag.usuarios = gestUtilidades.ListarUsuarios();
             ViewBag.categorias = gestUtilidades.ListarCategorias().Where(c => c.EsActivo).ToList();
-            //ViewBag.listarTipoDeContenido = gestUtilidades.ListarTipoDeContenidoPorID();
+            
+            BE.BETicket ticketReferencia = gestionTicket.ListarDatosAsignacion(id);
+            ViewBag.subcategorias = gestUtilidades.ListarSubCategorias(ticketReferencia.IdCategoria).Where(c => c.EsActivo).ToList();
 
             foreach (var correo in correos)
             {
@@ -98,7 +100,7 @@ namespace MyServiceDesk.Controllers
 
             if (!mensaje.StartsWith("Error")) // Si no hubo error
             {
-                mensaje = gestionTicket.ActualizarEstadoTicket(ticket.IdTicket, ticket.IdEstado);
+                mensaje = gestionTicket.ActualizarEstadoTicket(ticket.IdTicket, ticket.IdEstado, ticket.IdCategoria, ticket.IdSubcategoria);
 
                 if (!mensaje.StartsWith("Error"))
                 {
@@ -138,7 +140,7 @@ namespace MyServiceDesk.Controllers
 
             if (!mensaje.StartsWith("Error"))
             {
-                mensaje = gestionTicket.ActualizarEstadoTicket(ticket.IdTicket, ticket.IdEstado);
+                mensaje = gestionTicket.ActualizarEstadoTicket(ticket.IdTicket, ticket.IdEstado, ticket.IdCategoria, ticket.IdSubcategoria);
                 if (!mensaje.StartsWith("Error"))
                 {
                     TempData["mensaje"] = "Cambios realizados satisfactoriamente";
