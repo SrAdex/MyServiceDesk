@@ -857,7 +857,7 @@ namespace DA
                     var urlHelper = new UrlHelper(HttpContext.Current.Request.RequestContext);
                     string dominio = HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority) + urlHelper.Content("~");
                     client.EnableSsl = true;
-                    client.Credentials = new System.Net.NetworkCredential("service.desk.mktg@adexperu.org.pe", "@dex2022");
+                    client.Credentials = new System.Net.NetworkCredential("servicedesk.gaf@adexperu.edu.pe", "@dex2023");
                     MailMessage message = new MailMessage()
                     {
                         IsBodyHtml = true,
