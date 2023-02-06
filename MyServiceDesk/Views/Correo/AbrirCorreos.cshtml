@@ -416,7 +416,6 @@
             /*alert(idTicket);*/
             var select = document.getElementById("cboEstado_" + idTicket);
             var idEstado = select.options[select.selectedIndex].value;
-
             $.post('@Url.Action("ActualizarEstadoTicket", "Ticket")', { idTicket: idTicket, idEstado: idEstado, IdCategoria: IdCategoria, idSubcategoria: idSubcategoria },
                 function (respuesta) {
                     console.log(respuesta);

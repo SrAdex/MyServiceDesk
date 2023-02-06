@@ -195,7 +195,7 @@ namespace MyServiceDesk.Controllers
         [Autorizacion(operacion: Enums.Operacion.ActualizarEstadoTicket)]
         public JsonResult ActualizarEstadoTicket(int idTicket, int idEstado, int IdCategoria, int IdSubcategoria)
         {
-            string mensaje = gestionTicket.ActualizarEstadoTicket(idTicket, idEstado, 0, 0);
+            string mensaje = gestionTicket.ActualizarEstadoTicket(idTicket, idEstado, IdCategoria, IdSubcategoria);
             string rpt = gestionTicket.EnviarActualizacionDeEstadoTicket(idTicket);
 
             if (mensaje.StartsWith("Error"))
