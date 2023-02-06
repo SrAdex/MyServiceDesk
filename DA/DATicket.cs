@@ -198,7 +198,7 @@ namespace DA
             return tickets;
         }
 
-        public string AsignarTicket(int idTicket, int idUsuarioResponsable, int idCategoria, int idSubCategoria)
+        public string AsignarTicket(int idTicket, int idUsuarioResponsable, int idCategoria, int idSubCategoria, int IdEstado)
         {
             string mensaje = "";
             var usuarioResponsable = gestionUsuario.BuscarUsuario(idUsuarioResponsable);
@@ -289,16 +289,15 @@ namespace DA
             string mensaje = "";
             try
             {
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
-                using (SmtpClient client = new SmtpClient("smtp.office365.com", 587))
+                using (SmtpClient client = new SmtpClient("smtp.gmail.com", 587))
                 {
                     var urlHelper = new UrlHelper(HttpContext.Current.Request.RequestContext);
                     string dominio = HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority) + urlHelper.Content("~");
                     string enlace = dominio + "Correo/AbrirCorreos/" + detalleTicket.IdTicket;
 
                     client.EnableSsl = true;
-                    client.Credentials = new System.Net.NetworkCredential("servicedesk.ti@adexperu.org.pe", "@dex2021");
+                    client.Credentials = new System.Net.NetworkCredential("servicedesk.gaf@adexperu.edu.pe", "@dex2023");
                     MailMessage message = new MailMessage()
                     {
                         IsBodyHtml = true,
@@ -312,15 +311,16 @@ namespace DA
                                 "Puede revisar el ticket en el siguiente enlace: <a href='" + enlace + "' >Visualizar Ticket</a> </br> </br> " +
                                 "<b>¡Favor de NO responder este correo!</b> </br> </br>" +
                                 "Atemtamente, </br>" +
-                                "Mesa de Servicio ADEX",
+                                "Mesa de Servicio GAF - ADEX",
 
                         BodyEncoding = System.Text.Encoding.UTF8,
                         Subject = "Ticket Asignado - " + detalleTicket.AsuntoTicket,
                         SubjectEncoding = System.Text.Encoding.UTF8,
-                        From = new MailAddress("servicedesk.ti@adexperu.org.pe")
+                        From = new MailAddress("servicedesk.gaf@adexperu.edu.pe")
                     };
 
                     message.To.Add(usuario.CorreoUsuario);
+                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
                     client.Send(message);
                     client.Dispose();
@@ -465,14 +465,14 @@ namespace DA
                 using (SmtpClient client = new SmtpClient("smtp.office365.com", 587))
                 {
                     client.EnableSsl = true;
-                    client.Credentials = new NetworkCredential("servicedesk.ti@adexperu.org.pe", "@dex2021");
+                    client.Credentials = new NetworkCredential("servicedesk.gaf@adexperu.edu.pe", "@dex2023");
                     MailMessage message = new MailMessage()
                     {
                         IsBodyHtml = true,
                         BodyEncoding = System.Text.Encoding.UTF8,
                         Subject = "Encuesta de satisfacción ticket: " + detalleTicket.AsuntoTicket,
                         SubjectEncoding = System.Text.Encoding.UTF8,
-                        From = new MailAddress("servicedesk.ti@adexperu.org.pe")
+                        From = new MailAddress("servicedesk.gaf@adexperu.edu.pe")
                     };
 
                     message.Body = $"Por favor responda la encuesta a través del siguiente link: {enlaceEncuesta} <br><br> "
@@ -635,12 +635,12 @@ namespace DA
                     string dominio = HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority) + urlHelper.Content("~");
 
                     client.EnableSsl = true;
-                    client.Credentials = new System.Net.NetworkCredential("service.desk.mktg@adexperu.org.pe", "@dex2022");
+                    client.Credentials = new System.Net.NetworkCredential("servicedesk.gaf@adexperu.edu.pe", "@dex2023");
                     MailMessage message = new MailMessage()
                     {
                         IsBodyHtml = true,
                         Body = "Estimado(a) " + ": </br>" +
-                                "Le brindamos la actualización del estado de su ticket Generado a Service Desk Marketing:" + "</br>" +
+                                "Le brindamos la actualización del estado de su ticket Generado a Service Desk GAF:" + "</br>" +
                                 "<b>Asunto: </b>" + detalleTicket.AsuntoTicket + "</br>" +
                                 "<b>Fecha de Generación: </b>" + detalleTicket.FechaGeneracion + "</br>" +
                                 "<b>Fecha de Entrega: </b>" + Convert.ToDateTime(detalleTicket.fechaEntrega).ToString("dd/MM/yyyy") + "</br>" +
@@ -648,12 +648,12 @@ namespace DA
                                 "<b>Estado: </b>" + detalleTicket.etapa + "</br> </br>" +
                                 "<b>¡Favor de NO responder este correo!</b> </br> </br>" +
                                 "Atemtamente, </br>" +
-                                "Mesa de Servicio ADEX RRHH",
+                                "Mesa de Servicio ADEX GAF",
 
                         BodyEncoding = System.Text.Encoding.UTF8,
                         Subject = "Actualización de Ticket - " + detalleTicket.AsuntoTicket,
                         SubjectEncoding = System.Text.Encoding.UTF8,
-                        From = new MailAddress("service.desk.mktg@adexperu.org.pe")
+                        From = new MailAddress("servicedesk.gaf@adexperu.edu.pe")
                     };
 
                     message.To.Add(detalleTicket.PropietarioTicket);
@@ -800,7 +800,7 @@ namespace DA
                     //string enlace = dominio + "Correo/AbrirCorreos/";
 
                     client.EnableSsl = true;
-                    client.Credentials = new System.Net.NetworkCredential("service.desk.mktg@adexperu.org.pe", "@dex2022");
+                    client.Credentials = new System.Net.NetworkCredential("servicedesk.gaf@adexperu.edu.pe", "@dex2023");
                     MailMessage message = new MailMessage()
                     {
                         IsBodyHtml = true,
@@ -823,7 +823,7 @@ namespace DA
                         BodyEncoding = System.Text.Encoding.UTF8,
                         Subject = "Solicitud Rechazada - " + detalleTicket.AsuntoTicket,
                         SubjectEncoding = System.Text.Encoding.UTF8,
-                        From = new MailAddress("service.desk.mktg@adexperu.org.pe")
+                        From = new MailAddress("servicedesk.gaf@adexperu.edu.pe")
                     };
 
                     message.To.Add(usuario.CorreoUsuario);
@@ -857,7 +857,7 @@ namespace DA
                     var urlHelper = new UrlHelper(HttpContext.Current.Request.RequestContext);
                     string dominio = HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority) + urlHelper.Content("~");
                     client.EnableSsl = true;
-                    client.Credentials = new System.Net.NetworkCredential("service.desk.mktg@adexperu.org.pe", "@dex2022");
+                    client.Credentials = new System.Net.NetworkCredential("servicedesk.gaf@adexperu.edu.pe", "@dex2023");
                     MailMessage message = new MailMessage()
                     {
                         IsBodyHtml = true,
@@ -869,12 +869,12 @@ namespace DA
                                 "<b>Etapa: </b>" + detalleTicket.EstadoTicket + "</br>" +
                                 "<b>Estado: </b>" + detalleTicket.etapa + "</br> </br>" +
                                 "Atemtamente, </br>" +
-                                "Mesa de Servicio ADEX Marketing",
+                                "Mesa de Servicio ADEX GAF",
 
                         BodyEncoding = System.Text.Encoding.UTF8,
                         Subject = "Ticket Actualizado - " + detalleTicket.AsuntoTicket,
                         SubjectEncoding = System.Text.Encoding.UTF8,
-                        From = new MailAddress("service.desk.mktg@adexperu.org.pe")
+                        From = new MailAddress("servicedesk.gaf@adexperu.edu.pe")
                     };
 
                     message.To.Add(detalleTicket.PropietarioTicket);

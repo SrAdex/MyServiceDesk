@@ -84,6 +84,22 @@ namespace MyServiceDesk.Controllers
         }
 
         [HttpPost]
+        public ActionResult AsignarTicket(int IdTicket, int IdResponsable = 0, int idCategoria = 0, int idSubcategoria = 0,int IdEstado = 1)
+        {
+            string mensaje = gestionTicket.AsignarTicket(IdTicket, IdResponsable, idCategoria, idSubcategoria, IdEstado);
+
+            TempData["mensaje"] = mensaje;
+
+            if (mensaje.StartsWith("Error: ", StringComparison.CurrentCultureIgnoreCase))
+                TempData["tipoAlerta"] = "alert-danger";
+            else
+                TempData["tipoAlerta"] = "alert-success";
+
+            return Redirect(Request.UrlReferrer.ToString());
+
+        }
+
+        [HttpPost]
         [ValidateInput(false)]
         public JsonResult GetDatosRespuesta(string codigoCorreo, int idTicket)
         {
