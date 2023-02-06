@@ -243,6 +243,11 @@ namespace DA
                     con.Close();
                 }
 
+                if(IdEstado == 3)
+                {
+                    string prueba = 
+                }
+
                 var detalleTicket = DetallarTicket(idTicket);
                 mensaje = NotificarUsuarioAsignacion(usuarioResponsable, detalleTicket);
             }
