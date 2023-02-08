@@ -213,9 +213,9 @@ namespace DA
                     cmd.Parameters.AddWithValue("@id_usuario_modificacion", usuario.IdUsuario);
 
                     if (idUsuarioResponsable > 0)
-                        cmd.Parameters.AddWithValue("@id_usuario_resposable", idUsuarioResponsable);
+                        cmd.Parameters.AddWithValue("@id_usuario_responsable", idUsuarioResponsable);
                     else
-                        cmd.Parameters.AddWithValue("@id_usuario_resposable", DBNull.Value);
+                        cmd.Parameters.AddWithValue("@id_usuario_responsable", DBNull.Value);
 
                     if (idCategoria > 0)
                         cmd.Parameters.AddWithValue("@id_categoria", idCategoria);
@@ -225,14 +225,30 @@ namespace DA
                     if (idSubCategoria > 0)
                         cmd.Parameters.AddWithValue("@id_subcategoria", idSubCategoria);
                     else
-                        cmd.Parameters.AddWithValue("@id_subcategoria", DBNull.Value);
+                        cmd.Parameters.AddWithValue("@id_subcategoria", DBNull.Value); 
+                    
+                    if (IdEstado > 0)
+                        cmd.Parameters.AddWithValue("@id_estado", IdEstado);
+                    else
+                        cmd.Parameters.AddWithValue("@id_estado", DBNull.Value);
 
                     cmd.Parameters.AddWithValue("@id_ticket", idTicket);
 
                     con.Open();
-                    cmd.ExecuteNonQuery();
+                    int rs = cmd.ExecuteNonQuery();
 
-                    mensaje = "Ticket Asignado correctamente";
+                    if (rs >= 1)
+                    {
+
+                        var detalleTicket = DetallarTicket(idTicket);
+                        mensaje = NotificarUsuarioAsignacion(usuarioResponsable, detalleTicket);
+                        mensaje = "Ticket Asignado correctamente";
+
+                        if (IdEstado == 3)
+                        {
+                            string msj = EnviarEncuesta(detalleTicket);
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -242,16 +258,7 @@ namespace DA
                 {
                     con.Close();
                 }
-
-                if(IdEstado == 3)
-                {
-                    string prueba = 
-                }
-
-                var detalleTicket = DetallarTicket(idTicket);
-                mensaje = NotificarUsuarioAsignacion(usuarioResponsable, detalleTicket);
             }
-
             return mensaje;
         }
 
@@ -467,7 +474,7 @@ namespace DA
             {
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
-                using (SmtpClient client = new SmtpClient("smtp.office365.com", 587))
+                using (SmtpClient client = new SmtpClient("smtp.gmail.com", 587))
                 {
                     client.EnableSsl = true;
                     client.Credentials = new NetworkCredential("servicedesk.gaf@adexperu.edu.pe", "@dex2023");
@@ -789,6 +796,7 @@ namespace DA
             }
             return valor;
         }
+        /*
         public string EliminarPedido(int id, string mensaje)
         {
             string respuesta = "";
@@ -848,6 +856,7 @@ namespace DA
 
             return respuesta;
         }
+        */
 
         public string EnviarActualizacionDeEstadoTicket(int idTicket)
         {

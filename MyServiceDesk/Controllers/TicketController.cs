@@ -116,9 +116,9 @@ namespace MyServiceDesk.Controllers
             return View(tickets);
         }
 
-        public ActionResult AsignarTicket(int idTicket, int idUsuarioResponsable = 0, int idCategoria = 0, int idSubCategoria = 0)
+        public ActionResult AsignarTicket(int idTicket, int idUsuarioResponsable = 0, int idCategoria = 0, int idSubCategoria = 0, int IdEstado = 1)
         {
-            string mensaje = gestionTicket.AsignarTicket(idTicket, idUsuarioResponsable, idCategoria, idSubCategoria);
+            string mensaje = gestionTicket.AsignarTicket(idTicket, idUsuarioResponsable, idCategoria, idSubCategoria, IdEstado);
 
             TempData["mensaje"] = mensaje;
 
@@ -149,24 +149,25 @@ namespace MyServiceDesk.Controllers
             return Redirect(Request.UrlReferrer.ToString());
         }
 
+        /*
         public ActionResult EnviarRespuestaDeRechazo(int idTicket, string textoRechazo)
         {
             string mensaje = gestionTicket.EliminarPedido(idTicket, textoRechazo);
             string respuesta = "Solicitud eliminada satisfactoriamente";
             TempData["mensaje"] = respuesta;
-            //string respuesta = gestionTicket.EliminarPedido(idTicket, mensaje);
-            //string mensaje = gestionTicket.AsignarTicket(idTicket, idUsuarioResponsable, idSubCategoria);
+            string respuesta = gestionTicket.EliminarPedido(idTicket, mensaje);
+            string mensaje = gestionTicket.AsignarTicket(idTicket, idUsuarioResponsable, idSubCategoria);
 
-            //TempData["mensaje"] = mensaje;
+            TempData["mensaje"] = mensaje;
 
-            //if (mensaje.StartsWith("Error: ", StringComparison.CurrentCultureIgnoreCase))
-            //    TempData["tipoAlerta"] = "alert-danger";
-            //else
-            //    TempData["tipoAlerta"] = "alert-success";
+            if (mensaje.StartsWith("Error: ", StringComparison.CurrentCultureIgnoreCase))
+                TempData["tipoAlerta"] = "alert-danger";
+            else
+                TempData["tipoAlerta"] = "alert-success";
 
             return Redirect(Request.UrlReferrer.ToString());
         }
-
+        */
         public JsonResult ListarDatosAsignacion(int idTicket)
         {
             BE.BETicket ticket = gestionTicket.ListarDatosAsignacion(idTicket);

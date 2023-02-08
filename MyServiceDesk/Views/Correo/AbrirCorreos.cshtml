@@ -26,11 +26,13 @@
 
 
                 </div>
+
+                @using (Html.BeginForm("AsignarTicket", "Correo", FormMethod.Post, new { onsubmit = "return asignacion(this);" }))
+                {
                 <div class="card-body">
                     <div class="table-responsive">
+                        <input type="hidden" name="IdTicket" value="@ticket.IdTicket" />
                         <table class="table w-100">
-                            <form action="@Url.Action("AsignarTicket", "Correo")" method="post">
-                                <input type="hidden" name="IdTicket" value="@ticket.IdTicket" />
                             <tr>
                                 <td class="td-detalle">Fecha Generación:</td>
                                 <td class="td-detalle">
@@ -42,13 +44,13 @@
                                 <td class="td-detalle"><span class="detalle">@ticket.GetFechaFormateada(ticket.FechaCierre)</span></td>
                             </tr>
                             <tr>
-                               
+
                                 <td class="td-detalle">Responsable: </td>
                                 <td class="td-detalle w-25">
                                     <select name="IdResponsable" id="@("cboResponsable_" + ticket.IdTicket)" class="custom-select">
                                         @foreach (var usuario in usuarios)
                                         {
-                                            <option value="@usuario.IdUsuario" @(ticket.UsuarioResponsable == usuario.NombreCompleto? "selected" : "")>
+                                            <option value="@usuario.IdUsuario" @(ticket.UsuarioResponsable == usuario.NombreCompleto ? "selected" : "")>
                                                 @(usuario.NombreCompleto)
                                             </option>
                                         }
@@ -79,7 +81,7 @@
                                     </select>
                                 </td>
                             </tr>
-                            
+
                             <tr>
                                 <td class="td-sistema">Etapa:</td>
                                 <td class="td-detalle">
@@ -99,10 +101,10 @@
                                 <td><input type="submit" name="" value="Editar" class="btn btn-primary btn-sm" /></td>
                                 <td></td>
                             </tr>
-                            </form>
                         </table>
                     </div>
                 </div>
+                }
             </div>
         </div>
     </div>
@@ -323,6 +325,7 @@
 
         var strValue = "@((string)TempData["alerta"])";
         var strMensaje = "@((string)TempData["mensaje"])";
+
         if (strValue == "alert alert-success") {
             toastr.success(strMensaje);
         }
@@ -391,6 +394,31 @@
                     alert("Error al obtener los datos de respuesta.");
                 }
             });
+        }
+
+        function asignacion(form) {
+
+            setTimeout(function () {
+                $('#loaderbody').fadeToggle();
+            }, 1000);
+            try {
+                $.ajax({
+                    type: 'POST',
+                    url: form.action,
+                    data: new FormData(form),
+                    success: function (res) {
+                        alert(1)
+                        if (res.isValid) {
+                            toastr.success(res.mensaje);
+                        } else {
+                            alert(2)
+                        }
+                    }
+                })
+            } catch (ex) {
+                console.log(ex)
+            }
+            
         }
 
         function actualizaResponsable(idTicket) {

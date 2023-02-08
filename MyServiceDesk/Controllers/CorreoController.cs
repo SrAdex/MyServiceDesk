@@ -84,19 +84,18 @@ namespace MyServiceDesk.Controllers
         }
 
         [HttpPost]
-        public ActionResult AsignarTicket(int IdTicket, int IdResponsable = 0, int idCategoria = 0, int idSubcategoria = 0,int IdEstado = 1)
+        public ActionResult AsignarTicket(int idTicket, int IdResponsable = 0, int idCategoria = 0, int idSubCategoria = 0, int IdEstado = 1)
         {
-            string mensaje = gestionTicket.AsignarTicket(IdTicket, IdResponsable, idCategoria, idSubcategoria, IdEstado);
+            string mensaje = gestionTicket.AsignarTicket(idTicket, IdResponsable, idCategoria, idSubCategoria, IdEstado);
 
             TempData["mensaje"] = mensaje;
 
             if (mensaje.StartsWith("Error: ", StringComparison.CurrentCultureIgnoreCase))
-                TempData["tipoAlerta"] = "alert-danger";
+                TempData["alerta"] = "alert alert-danger";
             else
-                TempData["tipoAlerta"] = "alert-success";
+                TempData["alerta"] = "alert alert-success";
 
-            return Redirect(Request.UrlReferrer.ToString());
-
+            return RedirectToAction("AbrirCorreos", "Correo", new { id = idTicket });
         }
 
         [HttpPost]
